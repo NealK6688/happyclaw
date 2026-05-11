@@ -1279,6 +1279,33 @@ async function runQuery(
       : 'memory-system.guest.md'
     : null;
 
+  // R7：AGENTS.md 多层作用域支持（与 CLAUDE.md 并列）
+  // SDK settingSources 已通过 'project' source 自动加载 cwd 下的 CLAUDE.md；
+  // 这里额外加载同目录的 AGENTS.md（业界事实标准，跨工具兼容 Cursor/Codex/OpenClaw）。
+  // 安全：fence 设死，只扫指定目录（WORKSPACE_GROUP + 可选 WORKSPACE_GLOBAL），
+  //       不递归到 cwd 任意父目录，避免容器模式跑去读宿主机 /AGENTS.md。
+  // 注入顺序：root-first concat（global 在前，group 在后），靠 prompt 后文覆盖前文实现"近覆盖远"。
+  const agentsMdDirs = isHome && !disableMemoryLayer
+    ? [WORKSPACE_GLOBAL, WORKSPACE_GROUP]
+    : [WORKSPACE_GROUP];
+  const agentsMdBlocks: string[] = [];
+  for (const dir of agentsMdDirs) {
+    const agentsMdPath = path.join(dir, 'AGENTS.md');
+    if (fs.existsSync(agentsMdPath)) {
+      try {
+        const content = fs.readFileSync(agentsMdPath, 'utf8').trim();
+        if (content) {
+          agentsMdBlocks.push(`### ${path.basename(dir)}/AGENTS.md\n${content}`);
+        }
+      } catch (err) {
+        log(`R7: 无法读取 ${agentsMdPath}: ${err}`);
+      }
+    }
+  }
+  const workspaceAgentsMd = agentsMdBlocks.length > 0
+    ? `<workspace-directives>\n${agentsMdBlocks.join('\n\n---\n\n')}\n</workspace-directives>`
+    : '';
+
   const promptPieces: PromptPiece[] = [
     { name: 'interaction.md', text: `<behavior>\n${INTERACTION_GUIDELINES}\n</behavior>` },
     { name: 'skill-routing.md', text: `<skill-routing>\n${SKILL_ROUTING_GUIDELINES}\n</skill-routing>` },
@@ -1289,6 +1316,9 @@ async function runQuery(
     { name: 'guidelines', text: GUIDELINES_BLOCK },
     ...(channelGuidelines
       ? [{ name: `channels/${channel}.md`, text: `<channel-format>\n${channelGuidelines}\n</channel-format>` }]
+      : []),
+    ...(workspaceAgentsMd
+      ? [{ name: 'workspace-directives.md', text: workspaceAgentsMd }]
       : []),
     ...(containerInput.agentId
       ? [{ name: 'agent-override.md', text: CONVERSATION_AGENT_BLOCK }]
