@@ -405,12 +405,14 @@ SQLite WAL 模式，Schema 经历 v1→v37 演进（`db.ts` 中的 `SCHEMA_VERSI
 data/
   db/messages.db                           # SQLite 数据库（WAL 模式）
   groups/{folder}/                         # 会话工作目录（Agent 可读写）
-  groups/{folder}/CLAUDE.md                # 会话私有记忆（Agent 自动维护）
+  groups/{folder}/CLAUDE.md                # 会话私有记忆（Agent 自动维护，SDK settingSources 自动加载）
+  groups/{folder}/AGENTS.md                # 会话私有记忆（AGENTS.md 业界标准命名，与 CLAUDE.md 并列；agent-runner 启动时显式 inline 注入到 system prompt，与 CLAUDE.md 共存）
   groups/{folder}/logs/                    # Agent 容器日志
   groups/{folder}/conversations/           # 对话归档（PreCompact Hook 写入）
   groups/{folder}/downloads/{channel}/     # IM 文件/图片下载目录（feishu / telegram / dingtalk，按日期分子目录）
   groups/user-global/{userId}/             # 用户级全局记忆目录
   groups/user-global/{userId}/CLAUDE.md    # 用户全局记忆（Agent 自动维护，per-user 隔离）
+  groups/user-global/{userId}/AGENTS.md    # 用户全局记忆（AGENTS.md 别名）
   sessions/{folder}/.claude/               # Claude 会话持久化（隔离）
   ipc/{folder}/input/                      # IPC 输入通道
   ipc/{folder}/messages/                   # IPC 消息输出
@@ -499,6 +501,17 @@ WebSocket：`/ws`（协议详见 §3.6）。
 ### 8.4 会话隔离
 
 每个会话拥有独立的 `groups/{folder}` 工作目录、`data/sessions/{folder}/.claude` 会话目录、`data/ipc/{folder}` IPC 命名空间。非主会话只能发消息给自己所在的群组。
+
+### 8.4.1 AGENTS.md / CLAUDE.md 多层作用域（R7）
+
+agent-runner 在 spawn 时按以下顺序拼接工作区指令到 system prompt（root-first concat，cwd 最近覆盖更通用规则）：
+
+1. `WORKSPACE_GLOBAL/AGENTS.md`（`data/groups/user-global/{userId}/AGENTS.md`，仅 isHome）—— 用户全局指令
+2. `WORKSPACE_GROUP/AGENTS.md`（`data/groups/{folder}/AGENTS.md`）—— 会话私有指令
+
+CLAUDE.md 仍由 SDK `settingSources: ['project', 'user']` 自动加载（无需重复注入）。AGENTS.md 是 **额外能力**，跨工具兼容业界事实标准（Cursor / OpenAI Codex / OpenClaw）。
+
+**安全 fence**：扫描严格限定在上述 2 个目录，**不递归任意父目录**（避免容器模式下读到宿主机 `/AGENTS.md`）。子目录的 AGENTS.md 不会被自动加载——如需子目录指令，Agent 在会话中主动 Read 即可。
 
 ### 8.5 主容器权限层级
 
