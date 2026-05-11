@@ -38,6 +38,27 @@ import {
   type ToolCallView,
 } from './feishu-cards/sections.js';
 
+// ─── R6: shared pure functions + constants from StreamingPresenter base ──
+// feishu 保留自己的 ToolCallState / StreamingState（与 base 的 BaseToolCallState / BaseStreamingState shape 不同）
+import {
+  findCodeBlockRanges,
+  findContainingBlock,
+  splitCodeBlockSafe,
+  extractTitleAndBody,
+  formatElapsed,
+  formatUsageNote,
+  MAX_THINKING_CHARS,
+  MAX_RECENT_EVENTS,
+  MAX_TOOL_DISPLAY,
+  MAX_TODO_DISPLAY,
+  MAX_TOOL_SUMMARY_CHARS,
+  MAX_ELEMENT_CHARS,
+  MAX_COMPLETED_TOOL_AGE,
+  type CodeBlockRange,
+} from './streaming-presenter-base.js';
+// 重新导出，保持外部 API 兼容（不破坏 feishu.ts / im-channel.ts / index.ts / routes/groups.ts 的 import）
+export { extractTitleAndBody };
+
 // ─── Types ────────────────────────────────────────────────────
 
 type StreamingState =
@@ -63,141 +84,13 @@ export interface StreamingCardOptions {
 
 // ─── Code-Block-Safe Splitting ───────────────────────────────
 
-interface CodeBlockRange {
-  open: number;
-  close: number;
-  lang: string;
-}
-
-/**
- * Scan text for fenced code block ranges (``` ... ```).
- */
-function findCodeBlockRanges(text: string): CodeBlockRange[] {
-  const ranges: CodeBlockRange[] = [];
-  const regex = /^```(\w*)\s*$/gm;
-  let match: RegExpExecArray | null;
-  let openMatch: RegExpExecArray | null = null;
-  let openLang = '';
-
-  while ((match = regex.exec(text)) !== null) {
-    if (!openMatch) {
-      openMatch = match;
-      openLang = match[1] || '';
-    } else {
-      ranges.push({
-        open: openMatch.index,
-        close: match.index + match[0].length,
-        lang: openLang,
-      });
-      openMatch = null;
-      openLang = '';
-    }
-  }
-
-  // Unclosed code block — treat from open to end of text
-  if (openMatch) {
-    ranges.push({
-      open: openMatch.index,
-      close: text.length,
-      lang: openLang,
-    });
-  }
-
-  return ranges;
-}
-
-/**
- * Check if a position falls inside any code block range.
- * Returns the range if found, null otherwise.
- */
-function findContainingBlock(
-  pos: number,
-  ranges: CodeBlockRange[],
-): CodeBlockRange | null {
-  for (const r of ranges) {
-    if (pos > r.open && pos < r.close) return r;
-  }
-  return null;
-}
-
-/**
- * Split text respecting fenced code block boundaries — never truncates inside
- * a code block without properly closing/reopening the fence.
- */
-function splitCodeBlockSafe(text: string, maxLen: number): string[] {
-  if (text.length <= maxLen) return [text];
-
-  const chunks: string[] = [];
-  let remaining = text;
-
-  while (remaining.length > maxLen) {
-    // Recompute ranges on current remaining text each iteration.
-    // This handles synthetic reopeners correctly since all positions
-    // are relative to `remaining`, not the original text.
-    const ranges = findCodeBlockRanges(remaining);
-
-    // Find a split point around maxLen
-    let idx = remaining.lastIndexOf('\n\n', maxLen);
-    if (idx < maxLen * 0.3) idx = remaining.lastIndexOf('\n', maxLen);
-    if (idx < maxLen * 0.3) idx = maxLen;
-
-    const block = findContainingBlock(idx, ranges);
-
-    if (block) {
-      // Split point is inside a code block
-      if (block.open > 0 && block.open > maxLen * 0.3) {
-        // Retreat to just before the code block opening
-        const retreatIdx = remaining.lastIndexOf('\n', block.open);
-        idx = retreatIdx > maxLen * 0.3 ? retreatIdx : block.open;
-        chunks.push(remaining.slice(0, idx).trimEnd());
-        remaining = remaining.slice(idx).replace(/^\n+/, '');
-      } else {
-        // Block starts too early to retreat — split inside but close/reopen fence
-        const chunk = remaining.slice(0, idx).trimEnd() + '\n```';
-        chunks.push(chunk);
-        const reopener = '```' + block.lang + '\n';
-        remaining = reopener + remaining.slice(idx).replace(/^\n/, '');
-      }
-    } else {
-      chunks.push(remaining.slice(0, idx).trimEnd());
-      remaining = remaining.slice(idx).replace(/^\n+/, '');
-    }
-  }
-
-  if (remaining) chunks.push(remaining);
-  return chunks;
-}
+// CodeBlockRange / findCodeBlockRanges / findContainingBlock / splitCodeBlockSafe
+// 移到 ./streaming-presenter-base.ts (R6)，4 套渠道 streaming card 公用
 
 const CARD_MD_LIMIT = 4000;
 const CARD_SIZE_LIMIT = 25 * 1024; // Feishu limit ~30KB, 5KB safety margin
 
-export function extractTitleAndBody(text: string): {
-  title: string;
-  body: string;
-} {
-  const lines = text.split('\n');
-  let title = '';
-  let bodyStartIdx = 0;
-
-  for (let i = 0; i < lines.length; i++) {
-    if (!lines[i].trim()) continue;
-    if (/^#{1,3}\s+/.test(lines[i])) {
-      title = lines[i].replace(/^#+\s*/, '').trim();
-    } else {
-      const firstLine = lines[i].replace(/[*_`#\[\]]/g, '').trim();
-      title =
-        firstLine.length > 40 ? firstLine.slice(0, 37) + '...' : firstLine;
-    }
-    bodyStartIdx = i + 1;
-    break;
-  }
-
-  const body = lines.slice(bodyStartIdx).join('\n').trim();
-
-  if (!title) title = 'Reply';
-
-  return { title, body };
-}
+// extractTitleAndBody 移到 ./streaming-presenter-base.ts (R6)，在顶部 import + re-export
 
 // ─── Shared Card Content Builder ─────────────────────────────
 
@@ -287,23 +180,11 @@ export interface ToolCallMeta {
   toolInput?: Record<string, unknown>;
 }
 
-function formatElapsed(ms: number): string {
-  if (ms < 1000) return `${ms}ms`;
-  const sec = ms / 1000;
-  if (sec < 60) return `${sec.toFixed(1)}s`;
-  const min = Math.floor(sec / 60);
-  return `${min}m ${Math.floor(sec % 60)}s`;
-}
+// formatElapsed + MAX_THINKING_CHARS / MAX_RECENT_EVENTS / MAX_TOOL_DISPLAY /
+// MAX_TODO_DISPLAY / MAX_TOOL_SUMMARY_CHARS / MAX_ELEMENT_CHARS / MAX_COMPLETED_TOOL_AGE
+// 都移到 ./streaming-presenter-base.ts (R6)
 
 // ─── Auxiliary State & Builder ────────────────────────────────
-
-const MAX_THINKING_CHARS = 800;
-const MAX_RECENT_EVENTS = 5;
-const MAX_TOOL_DISPLAY = 5;
-const MAX_TODO_DISPLAY = 10;
-const MAX_TOOL_SUMMARY_CHARS = 60;
-const MAX_ELEMENT_CHARS = 4000;
-const MAX_COMPLETED_TOOL_AGE = 30000; // 30s — purge completed tools after this
 
 export interface AuxiliaryState {
   thinkingText: string;
@@ -608,23 +489,7 @@ function buildSchema2Card(
 
 // ─── Usage Note Formatter ─────────────────────────────────────
 
-function formatUsageNote(usage: {
-  inputTokens: number;
-  outputTokens: number;
-  costUSD: number;
-  durationMs: number;
-  numTurns: number;
-}): string {
-  const fmt = (n: number) =>
-    n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n);
-  const parts: string[] = [];
-  parts.push(`${fmt(usage.inputTokens)} / ${fmt(usage.outputTokens)} tokens`);
-  if (usage.costUSD > 0) parts.push(`$${usage.costUSD.toFixed(4)}`);
-  if (usage.durationMs > 0)
-    parts.push(`${(usage.durationMs / 1000).toFixed(1)}s`);
-  if (usage.numTurns > 1) parts.push(`${usage.numTurns} turns`);
-  return `💰 ${parts.join(' · ')}`;
-}
+// formatUsageNote 移到 ./streaming-presenter-base.ts (R6)
 
 // ─── Streaming Mode Card Builder ──────────────────────────────
 
