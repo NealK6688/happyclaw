@@ -180,6 +180,10 @@ status: ## 查看服务运行状态
 typecheck: sync-types typecheck-backend typecheck-web typecheck-agent-runner ## 全量类型检查
 	@./scripts/check-stream-event-sync.sh
 	@./scripts/check-agent-runner-prompts.sh
+	@./scripts/check-claudemd-sync.sh
+
+check-claudemd: ## 仅校验 CLAUDE.md 与代码同步
+	@./scripts/check-claudemd-sync.sh
 
 typecheck-backend:
 	$(RUN) tsc --noEmit
