@@ -1103,6 +1103,18 @@ function setupWebSocket(server: any): WebSocketServer {
           ws.send(JSON.stringify(msg));
         };
 
+        if (msg.type === 'ping') {
+          // R9：WS 心跳。立即回 pong，让前端测算 RTT 检测断线。
+          // 不验证 session（已通过 WS 升级时校验），不做权限检查（心跳 trivial）。
+          const pong: WsMessageOut = {
+            type: 'pong',
+            clientTimestamp: typeof (msg as { timestamp?: number }).timestamp === 'number' ? (msg as { timestamp: number }).timestamp : 0,
+            serverTimestamp: Date.now(),
+          };
+          try { ws.send(JSON.stringify(pong)); } catch { /* connection closed */ }
+          return;
+        }
+
         if (msg.type === 'send_message') {
           const wsValidation = MessageCreateSchema.safeParse({
             chatJid: msg.chatJid,

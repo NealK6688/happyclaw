@@ -9,6 +9,12 @@ class WsManager {
   private reconnectDelay = 1000;
   private maxReconnectDelay = 30000;
 
+  // R9：心跳。每 25s 发 ping，60s 未收 pong 则视为断线，主动 close 触发重连。
+  private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+  private lastPongAt = 0;
+  private readonly HEARTBEAT_INTERVAL = 25_000;
+  private readonly STALE_THRESHOLD = 60_000;
+
   connect() {
     if (
       this.ws?.readyState === WebSocket.OPEN ||
@@ -30,6 +36,8 @@ class WsManager {
     ws.onopen = () => {
       if (this.ws !== ws) return;
       this.reconnectDelay = 1000;
+      this.lastPongAt = Date.now();
+      this.startHeartbeat();
       this.emit('connected', {});
     };
 
@@ -37,12 +45,20 @@ class WsManager {
       if (this.ws !== ws) return;
       try {
         const data = JSON.parse(event.data);
+        if (data.type === 'pong') {
+          // R9：心跳响应。记录到达时间 + 派发 'heartbeat-alive' 供 UI 显示 RTT
+          this.lastPongAt = Date.now();
+          const rtt = typeof data.clientTimestamp === 'number' ? this.lastPongAt - data.clientTimestamp : -1;
+          this.emit('heartbeat-alive', { rtt });
+          return;
+        }
         this.emit(data.type, data);
       } catch {}
     };
 
     ws.onclose = (event: CloseEvent) => {
       if (this.ws !== ws) return;
+      this.stopHeartbeat();
       this.emit('disconnected', {});
       // 1008 = Policy Violation (backend auth failure), 4001 = custom auth error
       if (event.code === 1008 || event.code === 4001) {
@@ -59,9 +75,35 @@ class WsManager {
     };
   }
 
+  private startHeartbeat() {
+    this.stopHeartbeat();
+    this.heartbeatTimer = setInterval(() => {
+      if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+        this.stopHeartbeat();
+        return;
+      }
+      // stale 检测：超过阈值未收 pong 视为断线，主动 close 触发 onclose → 重连
+      const staleFor = Date.now() - this.lastPongAt;
+      if (staleFor > this.STALE_THRESHOLD) {
+        this.emit('heartbeat-stale', { staleFor });
+        try { this.ws.close(4000, 'heartbeat-stale'); } catch {}
+        return;
+      }
+      this.send({ type: 'ping', timestamp: Date.now() });
+    }, this.HEARTBEAT_INTERVAL);
+  }
+
+  private stopHeartbeat() {
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = null;
+    }
+  }
+
   disconnect() {
     if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
     this.reconnectTimer = null;
+    this.stopHeartbeat();
     const ws = this.ws;
     this.ws = null;
     ws?.close();
