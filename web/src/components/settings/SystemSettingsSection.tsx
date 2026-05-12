@@ -167,6 +167,7 @@ export function SystemSettingsSection() {
   const [externalClaudeDir, setExternalClaudeDir] = useState('');
   const [disableMemoryLayerForAdminHost, setDisableMemoryLayerForAdminHost] = useState(false);
   const [pluginAutoScan, setPluginAutoScan] = useState<boolean>(true);
+  const [feishuStreamingCardEnabled, setFeishuStreamingCardEnabled] = useState<boolean>(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -194,6 +195,7 @@ export function SystemSettingsSection() {
         setExternalClaudeDir(data.externalClaudeDir ?? '');
         setDisableMemoryLayerForAdminHost(data.disableMemoryLayerForAdminHost ?? false);
         setPluginAutoScan(data.pluginAutoScan ?? true);
+        setFeishuStreamingCardEnabled(data.feishuStreamingCardEnabled ?? true);
       } catch (err) {
         toast.error(getErrorMessage(err, '加载系统参数失败'));
       } finally {
@@ -241,6 +243,7 @@ export function SystemSettingsSection() {
         externalClaudeDir,
         disableMemoryLayerForAdminHost,
         pluginAutoScan,
+        feishuStreamingCardEnabled,
       };
       for (const f of fields) {
         const val = displayValues[f.key];
@@ -262,6 +265,7 @@ export function SystemSettingsSection() {
       setExternalClaudeDir(data.externalClaudeDir ?? '');
       setDisableMemoryLayerForAdminHost(data.disableMemoryLayerForAdminHost ?? false);
       setPluginAutoScan(data.pluginAutoScan ?? true);
+      setFeishuStreamingCardEnabled(data.feishuStreamingCardEnabled ?? true);
       // 刷新计费状态，更新导航栏可见性
       loadBillingStatus();
       toast.success('系统参数已保存，新参数将对后续启动的容器/进程生效');
@@ -464,6 +468,36 @@ export function SystemSettingsSection() {
             checked={pluginAutoScan}
             onCheckedChange={setPluginAutoScan}
             aria-label="Plugin Catalog 自动扫描"
+          />
+        </div>
+      </div>
+
+      {/* 飞书 V2 流式卡片 */}
+      <div className="border-t border-border pt-6 space-y-5">
+        <h3 className="text-sm font-semibold text-foreground">飞书 V2 流式卡片</h3>
+
+        <div className="flex items-center justify-between">
+          <div className="flex-1 pr-4">
+            <Label>启用 5 面板实时流式卡片</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              开启时（默认）飞书回复走 CardKit v2 流式卡片，包含 STATUS_BANNER /
+              Todo 进度 / 工具时间轴 / 思考过程 / 调用轨迹 5 个实时面板。
+              关闭后所有飞书消息走单条静态卡片路径，与 Telegram / 钉钉 等渠道行为一致。
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              <strong>关闭场景</strong>：飞书 App 缺 <code>cardkit:card:write</code> scope
+              或机器人能力下「消息卡片」未配齐时，每次发送都会先 fallback 失败再补发静态消息，
+              导致一次回复出现两张卡片观感混乱。这种情况下建议关闭此开关。
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              <strong>影响</strong>：关闭后用户看不到工具调用时间轴和思考过程的实时面板，
+              但 Agent 最终回复内容完全一致。仅影响视觉体验，不影响功能。
+            </p>
+          </div>
+          <Switch
+            checked={feishuStreamingCardEnabled}
+            onCheckedChange={setFeishuStreamingCardEnabled}
+            aria-label="飞书 V2 流式卡片"
           />
         </div>
       </div>

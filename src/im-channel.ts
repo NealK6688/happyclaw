@@ -44,6 +44,7 @@ import {
   type WhatsAppConnectionConfig,
   type WhatsAppConnectionState,
 } from './whatsapp.js';
+import { getSystemSettings } from './runtime-config.js';
 import { logger } from './logger.js';
 import type { FeishuMessageMeta } from './types.js';
 import {
@@ -295,6 +296,10 @@ export function createFeishuChannel(config: FeishuConnectionConfig): IMChannel {
       onCardCreated?: (messageId: string) => void,
     ): Promise<StreamingSession | undefined> {
       if (!inner) return undefined;
+      // Global kill-switch: when feishu app lacks cardkit:card:write scope/capability,
+      // skip streaming card entirely so reply goes through normal sendMessage path
+      // (single static card, no double-card UX from fallback chain failures).
+      if (!getSystemSettings().feishuStreamingCardEnabled) return undefined;
       const larkClient = inner.getLarkClient();
       if (!larkClient) return undefined;
       const opts: StreamingCardOptions = {

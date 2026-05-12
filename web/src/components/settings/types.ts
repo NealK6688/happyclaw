@@ -107,6 +107,7 @@ export interface SystemSettings {
   disableMemoryLayerForAdminHost: boolean;
   pluginAutoScan: boolean;
   taskBackfillGraceMs: number;
+  feishuStreamingCardEnabled: boolean;
 }
 
 // ─── OAuth Usage ────────────────────────────────────────────

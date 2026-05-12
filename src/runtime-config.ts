@@ -3618,6 +3618,10 @@ export interface SystemSettings {
   // 跨天积压任务集体在重启那一秒并发 fire 刷屏。
   // 0 = 关闭（保留旧行为：无视逾期时长全部 backfill）。默认 300000 (5 分钟)。
   taskBackfillGraceMs: number;
+  // 飞书 V2 流式卡片总开关。true（默认）= 启用 5 面板流式卡片；false = 走单条静态消息路径。
+  // 关闭场景：app 缺 cardkit:card:write scope 或对应能力（兼容老 App / 受限租户），
+  // 避免每次都先 fallback 失败再补发静态消息，产生两张卡片观感混乱。
+  feishuStreamingCardEnabled: boolean;
 }
 
 const DEFAULT_SYSTEM_SETTINGS: SystemSettings = {
@@ -3640,6 +3644,7 @@ const DEFAULT_SYSTEM_SETTINGS: SystemSettings = {
   disableMemoryLayerForAdminHost: false,
   pluginAutoScan: true,
   taskBackfillGraceMs: 300000,
+  feishuStreamingCardEnabled: true,
 };
 
 function parseIntEnv(envVar: string | undefined, fallback: number): number {
@@ -3743,6 +3748,10 @@ function readSystemSettingsFromFile(): SystemSettings | null {
       raw.taskBackfillGraceMs >= 0
         ? raw.taskBackfillGraceMs
         : DEFAULT_SYSTEM_SETTINGS.taskBackfillGraceMs,
+    feishuStreamingCardEnabled:
+      typeof raw.feishuStreamingCardEnabled === 'boolean'
+        ? raw.feishuStreamingCardEnabled
+        : DEFAULT_SYSTEM_SETTINGS.feishuStreamingCardEnabled,
   };
 }
 
@@ -3815,6 +3824,10 @@ function buildEnvFallbackSettings(): SystemSettings {
       process.env.TASK_BACKFILL_GRACE_MS,
       DEFAULT_SYSTEM_SETTINGS.taskBackfillGraceMs,
     ),
+    feishuStreamingCardEnabled:
+      process.env.FEISHU_STREAMING_CARD_ENABLED === 'false'
+        ? false
+        : DEFAULT_SYSTEM_SETTINGS.feishuStreamingCardEnabled,
   };
 }
 

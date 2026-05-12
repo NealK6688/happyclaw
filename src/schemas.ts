@@ -254,6 +254,7 @@ export const SystemSettingsSchema = z.object({
       'taskBackfillGraceMs must be 0 (disabled) or between 1000 (1s) and 86400000 (24h)',
     )
     .optional(),
+  feishuStreamingCardEnabled: z.boolean().optional(),
 });
 
 export const AppearanceConfigSchema = z.object({
