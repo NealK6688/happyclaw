@@ -1520,22 +1520,92 @@ export class StreamingCardController {
     ) {
       try {
         await this.finalizeStreamingCard('aborted');
-      } catch (err) {
-        logger.debug(
-          { err, chatId: this.chatId },
+      } catch (err: any) {
+        logger.warn(
+          {
+            err,
+            chatId: this.chatId,
+            code: err?.code ?? err?.response?.data?.code,
+            msg: err?.message ?? err?.response?.data?.msg,
+          },
           'Streaming card: abort finalize failed',
         );
       }
     } else if ((this.messageId || this.multiCard) && wasActive) {
       try {
         await this.patchCard('aborted');
-      } catch (err) {
-        logger.debug(
-          { err, chatId: this.chatId },
+      } catch (err: any) {
+        logger.warn(
+          {
+            err,
+            chatId: this.chatId,
+            code: err?.code ?? err?.response?.data?.code,
+            msg: err?.message ?? err?.response?.data?.msg,
+          },
           'Streaming card: abort patch failed',
         );
       }
     }
+  }
+
+  /**
+   * Fallback path used when complete() throws: try to patch the final text
+   * (already stored in accumulatedText by the failed complete() call) into
+   * the original card so the user sees one clean card instead of two.
+   *
+   * Returns `true` if the card was successfully patched to the final state,
+   * `false` otherwise — the caller should then fall through to sending a
+   * standalone message so the reply still reaches the user.
+   *
+   * Unlike abort(), this skips the reason footer (no "回复已通过消息发送"
+   * annotation), since on this path the original card is the real reply.
+   */
+  async tryFinalizeInPlace(): Promise<boolean> {
+    if (this.state === 'completed' || this.state === 'aborted') return false;
+
+    const wasActive = this.isActive();
+    this.state = 'aborted';
+    this.flushCtrl.dispose();
+    this.textFlushCtrl?.dispose();
+    this.auxFlushCtrl?.dispose();
+
+    if (!wasActive) return false;
+
+    if (this.backendMode === 'streaming' && this.streamingBackend) {
+      try {
+        await this.finalizeStreamingCard('completed');
+        return true;
+      } catch (err: any) {
+        logger.warn(
+          {
+            err,
+            chatId: this.chatId,
+            code: err?.code ?? err?.response?.data?.code,
+            msg: err?.message ?? err?.response?.data?.msg,
+          },
+          'Streaming card: in-place finalize fallback failed',
+        );
+        return false;
+      }
+    } else if (this.messageId || this.multiCard) {
+      try {
+        await this.patchCard('completed');
+        return true;
+      } catch (err: any) {
+        logger.warn(
+          {
+            err,
+            chatId: this.chatId,
+            code: err?.code ?? err?.response?.data?.code,
+            msg: err?.message ?? err?.response?.data?.msg,
+          },
+          'Streaming card: in-place finalize fallback failed',
+        );
+        return false;
+      }
+    }
+
+    return false;
   }
 
   dispose(): void {
@@ -1752,14 +1822,16 @@ export class StreamingCardController {
         await this.streamingBackend!.streamContent(this.accumulatedText);
         this.textFlushCtrl!.markFlushed(this.accumulatedText.length);
         this.patchFailCount = 0;
-      } catch (err) {
+      } catch (err: any) {
         this.patchFailCount++;
-        logger.debug(
+        logger.warn(
           {
             err,
             chatId: this.chatId,
             failCount: this.patchFailCount,
             mode: 'streaming',
+            code: err?.code ?? err?.response?.data?.code,
+            msg: err?.message ?? err?.response?.data?.msg,
           },
           'Streaming content push failed',
         );
@@ -2154,14 +2226,16 @@ export class StreamingCardController {
         );
         this.flushCtrl.markFlushed(this.accumulatedText.length);
         this.patchFailCount = 0;
-      } catch (err) {
+      } catch (err: any) {
         this.patchFailCount++;
-        logger.debug(
+        logger.warn(
           {
             err,
             chatId: this.chatId,
             failCount: this.patchFailCount,
             mode: 'cardkit',
+            code: err?.code ?? err?.response?.data?.code,
+            msg: err?.message ?? err?.response?.data?.msg,
           },
           'CardKit card update failed',
         );
@@ -2185,14 +2259,16 @@ export class StreamingCardController {
         });
         this.flushCtrl.markFlushed(this.accumulatedText.length);
         this.patchFailCount = 0;
-      } catch (err) {
+      } catch (err: any) {
         this.patchFailCount++;
-        logger.debug(
+        logger.warn(
           {
             err,
             chatId: this.chatId,
             failCount: this.patchFailCount,
             mode: 'legacy',
+            code: err?.code ?? err?.response?.data?.code,
+            msg: err?.message ?? err?.response?.data?.msg,
           },
           'Streaming card patch failed',
         );

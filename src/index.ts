@@ -3378,16 +3378,40 @@ async function processGroupMessages(chatJid: string): Promise<boolean> {
                     { chatJid },
                     'Streaming card completed with final text',
                   );
-                } catch (err) {
+                } catch (err: any) {
                   logger.warn(
-                    { err, chatJid },
-                    'Streaming card complete failed, falling back to static message',
+                    {
+                      err,
+                      chatJid,
+                      code: err?.code ?? err?.response?.data?.code,
+                      msg: err?.message ?? err?.response?.data?.msg,
+                    },
+                    'Streaming card complete failed, attempting in-place finalize',
                   );
-                  // Abort the card so it doesn't stay stuck in "streaming" state
-                  await streamingSession
-                    .abort('回复已通过消息发送')
-                    .catch(() => {});
-                  // Fall through to normal sendMessage
+                  // complete() already wrote finalText into accumulatedText before
+                  // throwing.  For Feishu, try patching the final text into the
+                  // original card — if that succeeds we avoid posting a second
+                  // standalone card.  Other channels fall back to abort + standalone
+                  // message as before.
+                  let finalized = false;
+                  if (streamingSession instanceof StreamingCardController) {
+                    finalized = await streamingSession
+                      .tryFinalizeInPlace()
+                      .catch(() => false);
+                  } else {
+                    await streamingSession
+                      .abort('回复已通过消息发送')
+                      .catch(() => {});
+                  }
+                  if (finalized) {
+                    streamingCardHandledIM = true;
+                    imManager.clearAckReaction(replySourceImJid || chatJid);
+                    logger.info(
+                      { chatJid },
+                      'Streaming card finalized in-place after complete() failure',
+                    );
+                  }
+                  // else: fall through to normal sendMessage as last resort
                 }
               }
 
@@ -6227,14 +6251,37 @@ async function processAgentConversation(
           try {
             await agentStreamingSession.complete(text);
             streamingCardHandledIM = true;
-          } catch (err) {
+          } catch (err: any) {
             logger.warn(
-              { err, chatJid, agentId },
-              'Agent streaming card complete failed, falling back to static message',
+              {
+                err,
+                chatJid,
+                agentId,
+                code: err?.code ?? err?.response?.data?.code,
+                msg: err?.message ?? err?.response?.data?.msg,
+              },
+              'Agent streaming card complete failed, attempting in-place finalize',
             );
-            await agentStreamingSession
-              .abort('回复已通过消息发送')
-              .catch(() => {});
+            // Same fallback as the main-agent path: try to patch the final
+            // text into the same card (Feishu only) so the user doesn't see
+            // a duplicate standalone message.
+            let finalized = false;
+            if (agentStreamingSession instanceof StreamingCardController) {
+              finalized = await agentStreamingSession
+                .tryFinalizeInPlace()
+                .catch(() => false);
+            } else {
+              await agentStreamingSession
+                .abort('回复已通过消息发送')
+                .catch(() => {});
+            }
+            if (finalized) {
+              streamingCardHandledIM = true;
+              logger.info(
+                { chatJid, agentId },
+                'Agent streaming card finalized in-place after complete() failure',
+              );
+            }
           }
         }
 
