@@ -164,6 +164,9 @@ interface ToolCallState {
   name: string;
   status: 'running' | 'complete' | 'error';
   startTime: number;
+  /** Wall-clock time when endTool() was called. Used to freeze elapsed time
+   *  after a tool finishes so the timeline doesn't keep counting up. */
+  endTime?: number;
   toolInputSummary?: string;
   /** When wrapping a Skill, the concrete skill name for display. */
   skillName?: string;
@@ -1278,6 +1281,7 @@ export class StreamingCardController {
     const tc = this.toolCalls.get(toolId);
     if (tc) {
       tc.status = isError ? 'error' : 'complete';
+      tc.endTime = Date.now();
       this.stateVersion++;
       this.purgeOldTools();
       if (this.state === 'streaming') {
@@ -1927,7 +1931,13 @@ export class StreamingCardController {
       .map((tc) => ({
         name: tc.name,
         status: tc.status,
-        durationMs: now - tc.startTime,
+        // Running tools tick up with wall-clock; finished tools freeze at their
+        // recorded endTime so the timeline doesn't keep accumulating after the
+        // tool has actually finished (esp. for long Task / sub-agent calls).
+        durationMs:
+          tc.status === 'running'
+            ? now - tc.startTime
+            : (tc.endTime ?? now) - tc.startTime,
         summary: tc.toolInputSummary,
         skillName: tc.skillName,
         isNested: tc.isNested,
