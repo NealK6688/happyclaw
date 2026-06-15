@@ -157,6 +157,13 @@ const STREAMING_CONFIG = {
 
 const MAX_STREAMING_CONTENT = 100000; // cardElement.content() supports 100K chars
 
+// Feishu streaming-mode cards have a ~10-minute lifetime; past it the platform
+// rejects further streaming pushes (error 200850/300309) and the card freezes,
+// silently dropping the tail — including the final conclusion of a long turn.
+// We proactively roll over to a fresh streaming card before reaching that limit.
+// 8.5min soft cap leaves headroom under the ~10min hard limit.
+const STREAMING_CARD_SOFT_LIFETIME_MS = 8.5 * 60 * 1000;
+
 // ─── Tool Progress & Elapsed Helpers ─────────────────────────
 
 /** Extended tool call state with timing and parameter summary */
@@ -886,11 +893,26 @@ class StreamingModeBackend {
       text_size: 'notation',
     });
 
-    await this.client.cardkit.v1.cardElement.update({
-      path: { card_id: this.cardId, element_id: elementId },
-      data: { element, sequence: this.nextSequence() },
-    });
-    this[hashField] = hash;
+    try {
+      await this.client.cardkit.v1.cardElement.update({
+        path: { card_id: this.cardId, element_id: elementId },
+        data: { element, sequence: this.nextSequence() },
+      });
+      this[hashField] = hash;
+    } catch (err: any) {
+      const code = err?.code ?? err?.response?.data?.code;
+      // 同 updateMarkdownContent：流式超时(200850/300309)后重开流式重试一次。
+      if (code === 200850 || code === 300309) {
+        await this.enableStreamingMode();
+        await this.client.cardkit.v1.cardElement.update({
+          path: { card_id: this.cardId, element_id: elementId },
+          data: { element, sequence: this.nextSequence() },
+        });
+        this[hashField] = hash;
+      } else {
+        throw err;
+      }
+    }
   }
 
   /**
@@ -905,11 +927,28 @@ class StreamingModeBackend {
     if (!this.cardId) return;
     const hash = quickHash(content);
     if (this.richSlotHashes.get(elementId) === hash) return;
-    await this.client.cardkit.v1.cardElement.content({
-      path: { card_id: this.cardId, element_id: elementId },
-      data: { content, sequence: this.nextSequence() },
-    });
-    this.richSlotHashes.set(elementId, hash);
+    try {
+      await this.client.cardkit.v1.cardElement.content({
+        path: { card_id: this.cardId, element_id: elementId },
+        data: { content, sequence: this.nextSequence() },
+      });
+      this.richSlotHashes.set(elementId, hash);
+    } catch (err: any) {
+      const code = err?.code ?? err?.response?.data?.code;
+      // 200850 = streaming timeout, 300309 = streaming closed.
+      // 面板/计时器更新此前无重试，飞书 ~10min 流式超时后会冻住计时器。
+      // 与正文 streamContent 一致：重新开启流式模式后重试一次。
+      if (code === 200850 || code === 300309) {
+        await this.enableStreamingMode();
+        await this.client.cardkit.v1.cardElement.content({
+          path: { card_id: this.cardId, element_id: elementId },
+          data: { content, sequence: this.nextSequence() },
+        });
+        this.richSlotHashes.set(elementId, hash);
+      } else {
+        throw err;
+      }
+    }
   }
 
   /**
@@ -1177,6 +1216,11 @@ export class StreamingCardController {
   private toolCalls = new Map<string, ToolCallState>();
   private startTime = 0;
   private backendMode: 'streaming' | 'v1' | 'legacy' = 'v1';
+  // Streaming-card lifetime rollover (Feishu ~10min limit). rolloverCount drives
+  // the "(续)" title prefix; rolloverInProgress guards against concurrent
+  // text/aux flushes both triggering a rollover at once.
+  private rolloverInProgress = false;
+  private rolloverCount = 0;
 
   // Auxiliary display state
   private systemStatus: string | null = null;
@@ -1822,11 +1866,24 @@ export class StreamingCardController {
     }
 
     this.textFlushCtrl.schedule(this.accumulatedText.length, async () => {
+      // Proactive rollover: near the card's ~10min lifetime, continue on a fresh
+      // card before the platform starts rejecting pushes (which freezes the tail).
+      if (this.shouldRolloverNow()) {
+        await this.rolloverStreamingCard();
+        return;
+      }
       try {
         await this.streamingBackend!.streamContent(this.accumulatedText);
         this.textFlushCtrl!.markFlushed(this.accumulatedText.length);
         this.patchFailCount = 0;
       } catch (err: any) {
+        const code = err?.code ?? err?.response?.data?.code;
+        // Reactive rollover: card lifetime expired mid-push — switch to a fresh card
+        // rather than counting failures toward the v1 (same-card) degrade path.
+        if (code === 200850 || code === 300309) {
+          await this.rolloverStreamingCard();
+          return;
+        }
         this.patchFailCount++;
         logger.warn(
           {
@@ -1834,7 +1891,7 @@ export class StreamingCardController {
             chatId: this.chatId,
             failCount: this.patchFailCount,
             mode: 'streaming',
-            code: err?.code ?? err?.response?.data?.code,
+            code,
             msg: err?.message ?? err?.response?.data?.msg,
           },
           'Streaming content push failed',
@@ -1981,6 +2038,12 @@ export class StreamingCardController {
     }
 
     this.auxFlushCtrl.schedule(this.stateVersion * 1000, async () => {
+      // Proactive rollover also fires on the aux path so a long silent tool run
+      // (no text flushes) still rolls the card over before it expires.
+      if (this.shouldRolloverNow()) {
+        await this.rolloverStreamingCard();
+        return;
+      }
       const patches = this.buildRichPanelPatches();
 
       // Every flush goes through cardElement.content() to update the inner
@@ -1993,22 +2056,14 @@ export class StreamingCardController {
           CARD_ELEMENT_IDS.STATUS_BANNER,
           patches.statusBanner,
         );
-        if (patches.askContent) {
-          await this.streamingBackend!.updateMarkdownContent(
-            CARD_ELEMENT_IDS.ASK_CONTENT,
-            patches.askContent,
-          );
-        }
+        // ASK_CONTENT / TOOLS_CONTENT 面板已移除（见 buildStreamingPanels 注释），
+        // 不再 patch 这两个 element_id。
         if (patches.progressContent) {
           await this.streamingBackend!.updateMarkdownContent(
             CARD_ELEMENT_IDS.PROGRESS_CONTENT,
             patches.progressContent,
           );
         }
-        await this.streamingBackend!.updateMarkdownContent(
-          CARD_ELEMENT_IDS.TOOLS_CONTENT,
-          patches.toolsContent,
-        );
         if (patches.thinkingContent) {
           await this.streamingBackend!.updateMarkdownContent(
             CARD_ELEMENT_IDS.THINKING_CONTENT,
@@ -2095,6 +2150,106 @@ export class StreamingCardController {
   }
 
   /**
+   * True when the current streaming card is close enough to Feishu's ~10min
+   * lifetime that we should proactively roll over before pushes start failing.
+   */
+  private shouldRolloverNow(): boolean {
+    return (
+      this.backendMode === 'streaming' &&
+      !!this.streamingBackend &&
+      !this.rolloverInProgress &&
+      this.startTime > 0 &&
+      Date.now() - this.startTime > STREAMING_CARD_SOFT_LIFETIME_MS
+    );
+  }
+
+  /**
+   * Roll over to a fresh streaming card mid-stream.
+   *
+   * Feishu streaming-mode cards expire after ~10min; past that the platform
+   * rejects pushes (200850/300309) and the card freezes, dropping the tail. When
+   * we approach (proactive) or hit (reactive) that limit, we freeze the current
+   * card with a continuation hint and continue streaming the SAME accumulated
+   * text on a brand-new card, resetting the lifetime clock. The full accumulated
+   * text is re-pushed so the new card is self-contained.
+   */
+  private async rolloverStreamingCard(): Promise<void> {
+    if (this.backendMode !== 'streaming' || !this.streamingBackend) return;
+    if (this.rolloverInProgress) return;
+    this.rolloverInProgress = true;
+    const oldBackend = this.streamingBackend;
+
+    try {
+      // 1. Freeze the old card best-effort (it may already be expired).
+      try {
+        await oldBackend.disableStreamingMode();
+        const frozenCard = buildSchema2Card(
+          this.accumulatedText || '...',
+          'frozen',
+          this.rolloverCount > 0 ? '(续) ' : '',
+          undefined,
+          undefined,
+          "<font color='grey'>⏱ 已达单卡时长上限，内容续传至下方新卡片 ↓</font>",
+        );
+        await oldBackend.updateCardFull(frozenCard);
+      } catch (freezeErr) {
+        logger.debug(
+          { err: freezeErr, chatId: this.chatId },
+          'Streaming rollover: freezing old card failed (likely already expired)',
+        );
+      }
+
+      // 2. Create a fresh streaming card carrying the current text + panels.
+      this.rolloverCount++;
+      const newBackend = new StreamingModeBackend(this.client);
+      const cardJson = buildStreamingModeCard(this.accumulatedText || '...');
+      await newBackend.createCard(cardJson);
+      const newMsgId = await newBackend.sendCard(this.chatId);
+
+      // 3. Rebind: swap backend, reset lifetime clock + flush controllers.
+      this.streamingBackend = newBackend;
+      this.messageId = newMsgId;
+      this.startTime = Date.now();
+      this.patchFailCount = 0;
+      this.textFlushCtrl?.dispose();
+      this.textFlushCtrl = new FlushController(300, 30);
+      this.auxFlushCtrl?.dispose();
+      this.auxFlushCtrl = new FlushController(800, 0);
+
+      // Register the new card for interrupt-button routing + cleanup tracking.
+      this.onCardCreated?.(newMsgId);
+
+      logger.info(
+        { chatId: this.chatId, newMsgId, rolloverCount: this.rolloverCount },
+        'Streaming card rolled over to a fresh card (lifetime limit)',
+      );
+    } catch (err) {
+      logger.warn(
+        { err, chatId: this.chatId },
+        'Streaming card rollover failed; degrading to v1',
+      );
+      // Rollover failed. If a streaming backend is still attached, degrade to v1
+      // on it; otherwise drop to the standalone-message fallback.
+      if (this.streamingBackend) {
+        this.rolloverInProgress = false;
+        this.degradeToV1();
+        return;
+      }
+      this.state = 'error';
+      this.onFallback?.();
+      return;
+    } finally {
+      this.rolloverInProgress = false;
+    }
+
+    // 4. Re-push current text + panels onto the fresh card.
+    if (this.state === 'streaming') {
+      this.scheduleTextFlush();
+      this.scheduleAuxFlush();
+    }
+  }
+
+  /**
    * Build a structured terminal card from the controller's accumulated state.
    * Reuses the shared v2 builder so the visual surface matches non-streaming
    * replies (metadata row, collapsible overflow, themed header).
@@ -2175,8 +2330,42 @@ export class StreamingCardController {
           { err: fallbackErr, chatId: this.chatId },
           'Streaming finalize truncated fallback also failed',
         );
+        // Last resort: the streaming card is fully expired (~10min lifetime), so
+        // updating it in place is impossible. Emit the final content on a
+        // brand-new card so the conclusion still reaches the user.
+        try {
+          await this.emitFinalOnFreshCard(finalState);
+        } catch (freshErr) {
+          logger.warn(
+            { err: freshErr, chatId: this.chatId },
+            'Streaming finalize fresh-card last resort also failed',
+          );
+        }
       }
     }
+  }
+
+  /**
+   * Emit the final accumulated content on a brand-new card. Used as the last
+   * resort when the live streaming card is fully expired and cannot be updated.
+   */
+  private async emitFinalOnFreshCard(
+    finalState: 'completed' | 'aborted',
+  ): Promise<void> {
+    const freshCard = new CardKitBackend(this.client);
+    const structured = this.buildStructuredFinalCard(finalState);
+    const sz = Buffer.byteLength(JSON.stringify(structured), 'utf-8');
+    const cardJson =
+      sz <= CARD_SIZE_LIMIT
+        ? structured
+        : buildSchema2Card(
+            this.accumulatedText.slice(0, 20000) + '\n\n> ⚠️ 输出已截断',
+            finalState,
+            this.rolloverCount > 0 ? '(续) ' : '',
+          );
+    await freshCard.createCard(cardJson);
+    const msgId = await freshCard.sendCard(this.chatId);
+    this.onCardCreated?.(msgId);
   }
 
   /**

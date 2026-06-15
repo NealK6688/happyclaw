@@ -39,11 +39,14 @@ describe('extractTitleAndBody (feishu-streaming-card)', () => {
     expect(result.body).toBe('more body');
   });
 
-  test('truncates long fallback title to 40 chars with ellipsis', () => {
+  test('truncates long fallback title to 30 chars with ellipsis, keeps full line in body', () => {
     const longLine = 'x'.repeat(80);
     const result = extractTitleAndBody(longLine);
-    expect(result.title.length).toBeLessThanOrEqual(40);
-    expect(result.title.endsWith('...')).toBe(true);
+    expect(result.title.length).toBeLessThanOrEqual(30);
+    expect(result.title.endsWith('…')).toBe(true);
+    // Long first line is NOT consumed into the title alone — the full line is
+    // preserved in the body so the truncated tail isn't lost.
+    expect(result.body).toBe(longLine);
   });
 
   test('empty input → default "Reply" title and empty body', () => {

@@ -13,7 +13,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { CONTAINER_IMAGE, DATA_DIR, GROUPS_DIR, TIMEZONE } from './config.js';
+import { CONTAINER_IMAGE, DATA_DIR, GLOBAL_AGENT_RULES_PATH, GROUPS_DIR, TIMEZONE } from './config.js';
 import { logger } from './logger.js';
 import {
   loadMountAllowlist,
@@ -139,7 +139,7 @@ function ensureSymlinkTo(localPath: string, targetPath: string): void {
  * 合并模式：仅覆盖这些 key，保留用户自定义的其他 key。
  */
 const REQUIRED_SETTINGS_ENV: Record<string, string> = {
-  CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: '0',
+  CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS: '1',
   CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD: '1',
   CLAUDE_CODE_DISABLE_AUTO_MEMORY: '0',
   // 禁用 SDK 附件注入（token_usage, changed_files, todo_reminders 等 20+ 种动态消息）。
@@ -218,6 +218,29 @@ export interface ContainerInput {
    * plugins.json; never set by the caller.
    */
   plugins?: Array<{ type: 'local'; path: string }>;
+  /**
+   * Global agent behavior rules (config/global-agent-rules.md) injected into the
+   * system prompt of EVERY session (all workspaces, home or not). Populated
+   * just-in-time at spawn by loadGlobalAgentRules(); never set by the caller.
+   * Holds only universal operating rules — no personal context/memory.
+   */
+  globalRules?: string;
+}
+
+/**
+ * Read config/global-agent-rules.md once and cache it. Universal behavior rules
+ * injected into every session's system prompt (see container/agent-runner). Empty
+ * string if the file is missing/unreadable (graceful: just no global rules block).
+ */
+let _globalRulesCache: string | undefined;
+function loadGlobalAgentRules(): string {
+  if (_globalRulesCache !== undefined) return _globalRulesCache;
+  try {
+    _globalRulesCache = fs.readFileSync(GLOBAL_AGENT_RULES_PATH, 'utf8').trim();
+  } catch {
+    _globalRulesCache = '';
+  }
+  return _globalRulesCache;
 }
 
 export interface ContainerOutput {
@@ -902,6 +925,7 @@ export async function runContainerAgent(
         plugins: group.created_by
           ? loadUserPlugins(group.created_by, { runtime: 'docker' })
           : [],
+        globalRules: loadGlobalAgentRules(),
       };
       container.stdin.write(JSON.stringify(dockerInput));
       container.stdin.end();
@@ -1680,6 +1704,7 @@ export async function runHostAgent(
       const hostInput: ContainerInput = {
         ...input,
         plugins: prepareHostPlugins(group.created_by),
+        globalRules: loadGlobalAgentRules(),
       };
       proc.stdin.write(JSON.stringify(hostInput));
       proc.stdin.end();

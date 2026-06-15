@@ -246,17 +246,18 @@ describe('formatters', () => {
     expect(extractTitle('#### Deep\nbody').title).toBe('Deep');
   });
 
-  test('extractTitle falls back to first-line preview (≤40 chars)', () => {
-    const text = 'Just some plain text that has no markdown heading at all';
+  test('extractTitle falls back to first-line preview (short line consumed as title)', () => {
+    const text = 'Just some plain text'; // ≤30 chars → consumed as title
     const { title, bodyStartIndex } = extractTitle(text);
-    expect(title.length).toBeLessThanOrEqual(40);
-    // First line was consumed as the title — bodyStartIndex must skip past it
+    expect(title.length).toBeLessThanOrEqual(30);
+    expect(title).toBe(text);
+    // Short first line was consumed as the title — bodyStartIndex must skip past it
     // so the body doesn't echo the same line back (issue #488).
     expect(bodyStartIndex).toBe(1);
   });
 
-  test('extractTitle: single-line input yields empty body to avoid duplication', () => {
-    const text = '~/.claude 同步完成：远端已是最新，无本地变更需要推送。';
+  test('extractTitle: short single-line input yields empty body to avoid duplication', () => {
+    const text = '~/.claude 同步完成，无变更。'; // ≤30 chars
     const { title, bodyStartIndex } = extractTitle(text);
     expect(title).toBe(text);
     expect(bodyStartIndex).toBe(1);
@@ -264,14 +265,16 @@ describe('formatters', () => {
     expect(text.split('\n').slice(bodyStartIndex).join('\n').trim()).toBe('');
   });
 
-  test('extractTitle: long single-line input gets truncated and body still empty', () => {
+  test('extractTitle: long single-line input is truncated, full line kept in body', () => {
     const text =
-      'a'.repeat(60) + ' end of long single line that exceeds the 40 char title cap';
+      'a'.repeat(60) + ' end of long single line that exceeds the title cap';
     const { title, bodyStartIndex } = extractTitle(text);
-    expect(title.length).toBeLessThanOrEqual(40);
-    expect(title.endsWith('...')).toBe(true);
-    expect(bodyStartIndex).toBe(1);
-    expect(text.split('\n').slice(bodyStartIndex).join('\n').trim()).toBe('');
+    expect(title.length).toBeLessThanOrEqual(30);
+    expect(title.endsWith('…')).toBe(true);
+    // Long first line is NOT consumed — it stays in the body so the truncated
+    // tail isn't lost (bodyStartIndex points at the line itself, not past it).
+    expect(bodyStartIndex).toBe(0);
+    expect(text.split('\n').slice(bodyStartIndex).join('\n').trim()).toBe(text);
   });
 
   test('extractTitle: multi-line fallback strips only the first non-empty line', () => {
@@ -581,16 +584,19 @@ describe('buildStreamingAgentCard', () => {
     const header = card.header as Record<string, unknown>;
     expect(header.template).toBe('blue');
 
-    // Rich skeleton: STATUS_BANNER + 3 collapsible panels + MAIN_CONTENT + BUTTON + FOOTER_NOTE
+    // Rich skeleton: STATUS_BANNER + 3 collapsible panels (PROGRESS / THINKING /
+    // TIMELINE) + MAIN_CONTENT + BUTTON + FOOTER_NOTE. TOOLS / ASK panels were
+    // removed in the panel-slimming pass (TOOLS redundant with TIMELINE; ASK
+    // never rendered since Feishu doesn't render AskUserQuestion option UI).
     const ids = new Set(collectElementIds(card));
     for (const required of [
       CARD_ELEMENT_IDS.STATUS_BANNER,
       CARD_ELEMENT_IDS.PROGRESS_PANEL,
       CARD_ELEMENT_IDS.PROGRESS_CONTENT,
-      CARD_ELEMENT_IDS.TOOLS_PANEL,
-      CARD_ELEMENT_IDS.TOOLS_CONTENT,
       CARD_ELEMENT_IDS.THINKING_PANEL,
       CARD_ELEMENT_IDS.THINKING_CONTENT,
+      CARD_ELEMENT_IDS.TIMELINE_PANEL,
+      CARD_ELEMENT_IDS.TIMELINE_CONTENT,
       CARD_ELEMENT_IDS.MAIN_CONTENT,
       CARD_ELEMENT_IDS.INTERRUPT_BTN,
       CARD_ELEMENT_IDS.FOOTER_NOTE,
@@ -599,9 +605,9 @@ describe('buildStreamingAgentCard', () => {
     }
   });
 
-  test('rich streaming card contains 5 collapsible panels (Phase F adds ask + timeline)', () => {
+  test('rich streaming card contains 3 collapsible panels (TOOLS + ASK removed)', () => {
     const card = buildStreamingAgentCard({ initialText: 'x' });
-    expect(countTag(card, 'collapsible_panel')).toBe(5);
+    expect(countTag(card, 'collapsible_panel')).toBe(3);
   });
 
   test('legacy (rich:false) streaming card keeps 5-slot flat layout', () => {
@@ -911,19 +917,23 @@ describe('buildTimelineText', () => {
   });
 });
 
-describe('buildStreamingAgentCard rich skeleton (Phase F)', () => {
-  test('includes ASK and TIMELINE panels', () => {
+describe('buildStreamingAgentCard rich skeleton (post panel-slimming)', () => {
+  test('keeps TIMELINE panel, drops ASK and TOOLS panels', () => {
     const card = buildStreamingAgentCard({ initialText: 'x' });
     const ids = new Set(collectElementIds(card));
-    expect(ids.has(CARD_ELEMENT_IDS.ASK_PANEL)).toBe(true);
-    expect(ids.has(CARD_ELEMENT_IDS.ASK_CONTENT)).toBe(true);
+    // TIMELINE (调用轨迹) is retained.
     expect(ids.has(CARD_ELEMENT_IDS.TIMELINE_PANEL)).toBe(true);
     expect(ids.has(CARD_ELEMENT_IDS.TIMELINE_CONTENT)).toBe(true);
+    // ASK (never renders on Feishu) and TOOLS (redundant with TIMELINE) removed.
+    expect(ids.has(CARD_ELEMENT_IDS.ASK_PANEL)).toBe(false);
+    expect(ids.has(CARD_ELEMENT_IDS.ASK_CONTENT)).toBe(false);
+    expect(ids.has(CARD_ELEMENT_IDS.TOOLS_PANEL)).toBe(false);
+    expect(ids.has(CARD_ELEMENT_IDS.TOOLS_CONTENT)).toBe(false);
   });
 
-  test('rich skeleton now has 5 collapsible panels', () => {
+  test('rich skeleton now has 3 collapsible panels', () => {
     const card = buildStreamingAgentCard({ initialText: 'x' });
-    expect(countTag(card, 'collapsible_panel')).toBe(5);
+    expect(countTag(card, 'collapsible_panel')).toBe(3);
   });
 });
 

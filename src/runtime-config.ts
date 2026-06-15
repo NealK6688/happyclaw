@@ -2790,11 +2790,20 @@ export function writeCredentialsFile(
 
   const filePath = path.join(sessionDir, '.credentials.json');
   const tmp = `${filePath}.tmp`;
+  // 含 OAuth access+refresh token 的长效凭据,必须 0o600(仅 owner 可读),与
+  // session-secret.key / 容器 env 文件一致。0o644 世界可读会让宿主机任意本地
+  // 进程读取冒用(安全审计 secrets-1)。
   fs.writeFileSync(tmp, JSON.stringify(credentialsData, null, 2) + '\n', {
     encoding: 'utf-8',
-    mode: 0o644,
+    mode: 0o600,
   });
   fs.renameSync(tmp, filePath);
+  // 兜底:rename 到已存在的目标可能保留旧 inode 权限,显式 chmod 收紧。
+  try {
+    fs.chmodSync(filePath, 0o600);
+  } catch {
+    // best-effort
+  }
 }
 
 /**

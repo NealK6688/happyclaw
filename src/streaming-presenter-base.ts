@@ -207,27 +207,35 @@ export function extractTitleAndBody(text: string): {
   body: string;
 } {
   const lines = text.split('\n');
-  let title = '';
-  let bodyStartIdx = 0;
+  // 飞书卡片标题会被头部宽度截断；超过这个长度的首行不当标题"吃掉"，
+  // 改为只在标题放截断预览、完整首行保留在正文，避免内容丢失。
+  const TITLE_MAX = 30;
 
   for (let i = 0; i < lines.length; i++) {
     if (!lines[i].trim()) continue;
+
+    // ① 显式 markdown 标题（#）→ 当标题，并从正文移除（它本就是短标签，回显冗余）。
     if (/^#{1,3}\s+/.test(lines[i])) {
-      title = lines[i].replace(/^#+\s*/, '').trim();
-    } else {
-      const firstLine = lines[i].replace(/[*_`#\[\]]/g, '').trim();
-      title =
-        firstLine.length > 40 ? firstLine.slice(0, 37) + '...' : firstLine;
+      const title = lines[i].replace(/^#+\s*/, '').trim() || 'Reply';
+      return { title, body: lines.slice(i + 1).join('\n').trim() };
     }
-    bodyStartIdx = i + 1;
-    break;
+
+    const clean = lines[i].replace(/[*_`#\[\]]/g, '').trim();
+
+    // ② 短散文首行 → 够短不会被截，安全地当标题并从正文移除。
+    if (clean.length <= TITLE_MAX) {
+      return { title: clean || 'Reply', body: lines.slice(i + 1).join('\n').trim() };
+    }
+
+    // ③ 长散文首行 → 飞书头会截断、剩余会丢。标题只放截断预览当"标签"，
+    //    完整首行**保留在正文**，确保展示不完的部分在正文可读。
+    return {
+      title: clean.slice(0, TITLE_MAX - 1) + '…',
+      body: lines.slice(i).join('\n').trim(),
+    };
   }
 
-  const body = lines.slice(bodyStartIdx).join('\n').trim();
-
-  if (!title) title = 'Reply';
-
-  return { title, body };
+  return { title: 'Reply', body: '' };
 }
 
 /** Format elapsed milliseconds as human-readable duration (Xms / X.Xs / Xm Xs) */

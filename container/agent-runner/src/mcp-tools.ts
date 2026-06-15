@@ -783,6 +783,10 @@ You can optionally specify execution_mode: "container" (default, isolated Docker
         name: z.string().describe('Display name for the group'),
         folder: z
           .string()
+          .regex(
+            /^[a-z0-9][a-z0-9_-]{0,63}$/,
+            'folder 只能由小写字母/数字/连字符/下划线组成,不能含 . / 路径分隔符或 ..(防路径遍历)',
+          )
           .describe(
             'Folder name for group files (lowercase, hyphens, e.g., "family-chat")',
           ),

@@ -1,6 +1,10 @@
 ---
 name: post-test-cleanup
-description: 测试完成后的扫尾清理流程。在向某个工作区发送测试指令（如长篇文章生成、耗时任务）后，用此流程彻底清除测试痕迹，防止测试消息残留在会话上下文中持续消耗 token 额度。
+description: >
+  Load when user finishes a test workflow and wants to wipe traces from session context —
+  trigger: "测试完成", "清理测试", "post-test cleanup", "把刚才的测试痕迹清掉". Removes
+  test messages from message buffer to free token budget.
+  Do NOT load for: normal task completion, regular draft deletion, file cleanup.
 ---
 
 # 测试后扫尾清理流程
@@ -119,3 +123,26 @@ git diff --stat
 - [ ] 测试消息已从 DB 删除
 - [ ] Claude session ID 已重置为新 UUID
 - [ ] `git status` 显示工作区干净
+
+## Evals
+
+**正例**（should_load）：
+
+- "刚才测试完了，把痕迹清掉" → load
+- "测试结束，重置 session" → load
+- "post-test cleanup 一下" → load 手动模式
+- "把刚才那个 5000 字测试消息清了，省 token" → load
+- "测试完了，工作区恢复干净" → load
+
+**负例**（should NOT load）：
+
+- "删除上次的草稿" → 普通文件删除，不是测试场景
+- "清理 docker 容器" → 普通 docker prune，不需要 skill
+- "重置我的偏好" → learn skill 路径
+- "把这条消息撤回" → 不是测试场景
+
+**已知失败**（沉淀为规则 / gotcha）：
+
+- ❌ 测试后没清，session 继续吃 token → 加规则 "测试后必须清"
+- ❌ 清了消息没重置 session → 加验证清单"Claude session ID 重置"
+- ❌ 误以为普通文件删除是 post-test cleanup → 加 negative scope

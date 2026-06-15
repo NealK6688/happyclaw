@@ -39,6 +39,12 @@ export interface ContainerInput {
    * host absolute path for host mode).
    */
   plugins?: Array<{ type: 'local'; path: string }>;
+  /**
+   * Global agent behavior rules (config/global-agent-rules.md), injected into the
+   * system prompt of EVERY session regardless of isHome. Universal operating rules
+   * only — no personal context. Populated by container-runner at spawn.
+   */
+  globalRules?: string;
 }
 
 export interface ContainerOutput {

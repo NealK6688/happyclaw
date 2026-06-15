@@ -83,6 +83,29 @@ const MEMORY_FLUSH_ALLOWED_TOOLS = [
   'Edit',  // 编辑全局 CLAUDE.md（永久记忆）
 ];
 
+/**
+ * Demo Room 隔离配置（2026-05-12 增加 R-demo-room）
+ *
+ * 演示房间（给同事/外部用户试用）应该禁用的高权限 MCP 工具，避免来访者
+ * （prompt inject 或好奇尝试）改坏 admin 的全局资源（skills / user-global CLAUDE.md /
+ * 跨群组注册等）。
+ *
+ * 触发：`containerInput.groupFolder` 在 DEMO_ROOM_FOLDERS 集合中。
+ * 局限：disallowedTools 只能 disable 具名工具，**不能阻止 Write/Edit/Bash
+ * 对特定路径的写入**（host 模式下 fs 全权限）—— 配合 AGENTS.md
+ * 软规则一起用，详见 `data/groups/agent-demo/AGENTS.md`。
+ *
+ * 新增 demo 房间：把 folder 名加入 DEMO_ROOM_FOLDERS 即可（无需 db schema 升级）。
+ */
+const DEMO_ROOM_FOLDERS = new Set(['agent-demo']);
+const DEMO_ROOM_DISALLOWED_TOOLS = [
+  // Admin 主容器特权 MCP（demo 房间继承不到，但显式禁用避免试探）
+  'mcp__happyclaw__register_group',
+  // Skill 管理（demo 房间不应改全局 skill 库）
+  'mcp__happyclaw__install_skill',
+  'mcp__happyclaw__uninstall_skill',
+];
+
 // Memory flush 期间禁用的工具（disallowedTools 会从模型上下文中完全移除这些工具）
 // 注意：allowedTools 仅控制自动审批，不限制工具可见性；
 //       bypassPermissions 模式下所有工具都自动通过，所以必须用 disallowedTools 来限制
@@ -1120,10 +1143,18 @@ async function runQuery(
 
   // SDK settingSources 只加载 ~/.claude/CLAUDE.md 本体，不递归加载 rules/；
   // 容器模式下 $HOME 指向会话目录，宿主机 CLAUDE.md 也读不到。因此 guidelines 必须 inline 注入。
+  // 全局 Agent 行为规则:注入到**所有会话**(不分 isHome/群组),内容由 container-runner
+  // 从 config/global-agent-rules.md 读入并随 ContainerInput 传入。只含通用操作规则,无个人上下文。
+  const globalRules = (containerInput.globalRules ?? '').trim();
+  const globalRulesBlock = globalRules
+    ? `<global-agent-rules>\n${globalRules}\n</global-agent-rules>`
+    : '';
+
   const systemPromptAppend = [
     `<behavior>\n${INTERACTION_GUIDELINES}\n</behavior>`,
     `<skill-routing>\n${SKILL_ROUTING_GUIDELINES}\n</skill-routing>`,
     `<security>\n${SECURITY_RULES}\n</security>`,
+    globalRulesBlock,
     memoryRecall && `<memory-system>\n${memoryRecall}\n</memory-system>`,
     GUIDELINES_BLOCK,
     channelGuidelines && `<channel-format>\n${channelGuidelines}\n</channel-format>`,
@@ -1717,6 +1748,13 @@ async function main(): Promise<void> {
 
       log(`Starting query (session: ${sessionId || 'new'}, resumeAt: ${resumeAt || 'latest'})...`);
 
+      // R-demo-room: 检测 demo 房间 → 注入 disallowedTools 禁用高权限 MCP
+      const isDemoRoom = DEMO_ROOM_FOLDERS.has(containerInput.groupFolder);
+      const demoRoomDisallowed = isDemoRoom ? DEMO_ROOM_DISALLOWED_TOOLS : undefined;
+      if (isDemoRoom) {
+        log(`Demo room detected (folder=${containerInput.groupFolder}); disallowedTools=${DEMO_ROOM_DISALLOWED_TOOLS.join(',')}`);
+      }
+
       const queryResult = await runQuery(
         prompt,
         sessionId,
@@ -1726,7 +1764,7 @@ async function main(): Promise<void> {
         resumeAt,
         true,
         DEFAULT_ALLOWED_TOOLS,
-        undefined,
+        demoRoomDisallowed,
         promptImages,
       );
       if (queryResult.newSessionId) {

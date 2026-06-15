@@ -17,6 +17,12 @@ export const MOUNT_ALLOWLIST_PATH = path.resolve(
   'config',
   'mount-allowlist.json',
 );
+// 全局 Agent 行为规则文件:注入所有工作区/会话的 system prompt(见 container-runner.ts loadGlobalAgentRules）
+export const GLOBAL_AGENT_RULES_PATH = path.resolve(
+  PROJECT_ROOT,
+  'config',
+  'global-agent-rules.md',
+);
 export const DATA_DIR = path.resolve(PROJECT_ROOT, 'data');
 export const STORE_DIR = path.join(DATA_DIR, 'db');
 export const GROUPS_DIR = path.join(DATA_DIR, 'groups');

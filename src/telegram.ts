@@ -49,6 +49,64 @@ export interface TelegramConnectOpts {
   onBotAddedToGroup?: (chatJid: string, chatName: string) => void;
   /** Bot 被移出群聊或群被解散时调用 */
   onBotRemovedFromGroup?: (chatJid: string) => void;
+  // ── 群聊门控（审计 im-channels-2，与飞书/钉钉/WhatsApp 一致）──
+  /** 群激活模式：返回 true=always 放行；false=需 @bot（when_mentioned/owner_mentioned） */
+  shouldProcessGroupMessage?: (chatJid: string, senderImId?: string) => boolean;
+  /** owner_mentioned 模式:判断发送者是否为群 owner（仅 bot 被 @ 时调用） */
+  isGroupOwnerMessage?: (chatJid: string, senderImId?: string) => boolean;
+  /** 发言者白名单:返回 false 则丢弃该发言者的群消息 */
+  isSenderAllowedInGroup?: (chatJid: string, senderImId?: string) => boolean;
+}
+
+/**
+ * Telegram 群聊是否 @ 了 bot:命中 @username mention / text_mention 指向 bot /
+ * 回复了 bot 的消息。ctx.me 是 grammY 提供的 bot 自身信息。
+ */
+function isTelegramBotMentioned(ctx: any): boolean {
+  const me = ctx.me;
+  if (!me) return false;
+  const text: string = ctx.message?.text ?? ctx.message?.caption ?? '';
+  const entities = ctx.message?.entities ?? ctx.message?.caption_entities ?? [];
+  for (const e of entities) {
+    if (e.type === 'mention' && me.username) {
+      const m = text.slice(e.offset, e.offset + e.length);
+      if (m.toLowerCase() === ('@' + me.username).toLowerCase()) return true;
+    }
+    if (e.type === 'text_mention' && e.user?.id === me.id) return true;
+  }
+  if (ctx.message?.reply_to_message?.from?.id === me.id) return true;
+  return false;
+}
+
+/**
+ * 群聊门控(审计 im-channels-2,对齐飞书/钉钉/WhatsApp):私聊放行;群聊先过
+ * 发言者白名单,再按 shouldProcessGroupMessage 决定是否需 @bot,owner_mentioned
+ * 模式下校验 owner。回调未传(undefined)时保持放行,向后兼容。
+ * 返回 true=继续处理 / false=丢弃。
+ */
+function passesTelegramGroupGate(
+  ctx: any,
+  jid: string,
+  senderId: string,
+  opts: TelegramConnectOpts,
+): boolean {
+  const t = ctx.chat?.type;
+  if (t !== 'group' && t !== 'supergroup') return true; // 私聊放行
+  if (
+    opts.isSenderAllowedInGroup &&
+    !opts.isSenderAllowedInGroup(jid, senderId)
+  ) {
+    return false; // 发言者不在白名单
+  }
+  const alwaysMode = opts.shouldProcessGroupMessage
+    ? opts.shouldProcessGroupMessage(jid, senderId)
+    : true;
+  if (alwaysMode) return true;
+  if (!isTelegramBotMentioned(ctx)) return false; // 需 @bot 但未 @
+  if (opts.isGroupOwnerMessage && !opts.isGroupOwnerMessage(jid, senderId)) {
+    return false; // owner_mentioned:被 @ 但非 owner
+  }
+  return true;
 }
 
 export interface TelegramConnection {
@@ -534,6 +592,20 @@ export function createTelegramConnection(
             }
           }
 
+          // ── 群聊门控(审计 im-channels-2):群里非白名单 / 未 @bot 的成员不驱动 agent ──
+          {
+            const gateSender = ctx.from?.id
+              ? `tg:${ctx.from.id}`
+              : 'tg:unknown';
+            if (!passesTelegramGroupGate(ctx, jid, gateSender, opts)) {
+              logger.debug(
+                { jid, sender: gateSender, msgId },
+                'Telegram group message dropped by gate (whitelist/mention)',
+              );
+              return;
+            }
+          }
+
           // Reaction 确认
           try {
             await ctx.react('👀');
@@ -631,6 +703,13 @@ export function createTelegramConnection(
               'Unauthorized Telegram chat (photo), ignoring',
             );
             return;
+          }
+          // 群聊门控(审计 im-channels-2)
+          {
+            const gateSender = ctx.from?.id
+              ? `tg:${ctx.from.id}`
+              : 'tg:unknown';
+            if (!passesTelegramGroupGate(ctx, jid, gateSender, opts)) return;
           }
 
           storeChatMetadata(jid, new Date().toISOString());
@@ -775,6 +854,13 @@ export function createTelegramConnection(
               'Unauthorized Telegram chat (document), ignoring',
             );
             return;
+          }
+          // 群聊门控(审计 im-channels-2)
+          {
+            const gateSender = ctx.from?.id
+              ? `tg:${ctx.from.id}`
+              : 'tg:unknown';
+            if (!passesTelegramGroupGate(ctx, jid, gateSender, opts)) return;
           }
 
           storeChatMetadata(jid, new Date().toISOString());

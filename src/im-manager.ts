@@ -486,6 +486,15 @@ class IMConnectionManager {
       onAgentMessage?: (baseChatJid: string, agentId: string) => void;
       onBotAddedToGroup?: (chatJid: string, chatName: string) => void;
       onBotRemovedFromGroup?: (chatJid: string) => void;
+      shouldProcessGroupMessage?: (
+        chatJid: string,
+        senderImId?: string,
+      ) => boolean;
+      isGroupOwnerMessage?: (chatJid: string, senderImId?: string) => boolean;
+      isSenderAllowedInGroup?: (
+        chatJid: string,
+        senderImId?: string,
+      ) => boolean;
     },
   ): Promise<boolean> {
     if (!config.botToken) {
@@ -512,6 +521,9 @@ class IMConnectionManager {
       onAgentMessage: options?.onAgentMessage,
       onBotAddedToGroup: options?.onBotAddedToGroup,
       onBotRemovedFromGroup: options?.onBotRemovedFromGroup,
+      shouldProcessGroupMessage: options?.shouldProcessGroupMessage,
+      isGroupOwnerMessage: options?.isGroupOwnerMessage,
+      isSenderAllowedInGroup: options?.isSenderAllowedInGroup,
     });
   }
 

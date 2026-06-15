@@ -1,6 +1,10 @@
 ---
 name: agent-browser
-description: Browse the web for any task — research topics, read articles, interact with web apps, fill forms, take screenshots, extract data, and test web pages. Use whenever a browser would be useful, not just when the user explicitly asks.
+description: >
+  Load when user needs browser-level interaction with a website — fill forms, click through flows, take screenshots,
+  extract data, test web pages, or when WebFetch returns insufficient / JS-rendered content. Drives a real Chromium
+  via `agent-browser` CLI.
+  Do NOT load for: simple GET URL fetches (use WebFetch first), or pure HTTP API calls.
 allowed-tools: Bash(agent-browser:*)
 ---
 
@@ -157,3 +161,26 @@ agent-browser get text @e1  # Get product title
 agent-browser get attr @e2 href  # Get link URL
 agent-browser screenshot products.png
 ```
+
+## Evals
+
+**正例**（should_load）：
+
+- "WebFetch 拉不到这个 SPA 的内容，帮我用浏览器抓一下" → load
+- "登录这个网站后帮我导出数据" → load（需要 form fill + auth state）
+- "截图飞书文档当前内容给我" → load
+- "测试一下这个表单提交流程" → load（E2E test）
+- "这个网页用了 React，给我点开第二个 tab 后的内容" → load（JS-rendered）
+
+**负例**（should NOT load）：
+
+- "查一下 https://example.com/page.html 的内容" → WebFetch first
+- "帮我调用 https://api.example.com/users 这个 API" → curl / HTTP，不用浏览器
+- "下载 https://example.com/file.pdf" → curl 直接 GET
+- "给我看下这个静态 HTML 怎么写" → Read 即可
+
+**已知失败**（沉淀为规则 / gotcha）：
+
+- ❌ WebFetch 可用却直接用 agent-browser → 加 description negative scope（"simple GET use WebFetch first"）
+- ❌ 没 snapshot -i 直接 click 用旧 refs → 加 gotcha "snapshot 后才用 @refs"
+- ⚠️ 等待页面加载用固定 sleep 而非 `wait --load networkidle` → 不稳定

@@ -706,6 +706,431 @@ tbody tr:hover { background: var(--bg-3); }
   <!-- ========== Vendor Table ========== -->
   <section id="vendor-table" class="h2-anchor">
     <h2>跨报告整合 — 厂商对比大表 (25 家) <a href="#vendor-table" class="anchor">¶</a></h2>
+    <figure style="margin:24px 0;">
+      <div style="width:100%;max-width:1600px;background:#fff;border-radius:8px;overflow:auto;" role="img" aria-label="25 厂商分布矩阵（产品形态 × 原产国，含 Top 3 采购优先级标注）">
+        <svg style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'PingFang SC', 'Inter', -apple-system, 'Segoe UI', sans-serif">
+  <!-- ============ defs ============ -->
+  <defs>
+    <pattern id="grid-bg" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#E2E8F0" stroke-width="0.5" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- ============ canvas bg ============ -->
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+
+  <!-- ============ title block ============ -->
+  <text x="40" y="42" font-size="22" font-weight="700" fill="#0F172A">取证厂商分布矩阵 — 25 家 × 类别 × 原产国</text>
+  <text x="40" y="66" font-size="13" fill="#64748B">X 轴 = 产品形态（软件套件 / 硬件设备 / 一体机 / 开源）；Y 轴 = 原产国；卡片高度 = 采购优先级；🥇🥈🥉 = Top 3 推荐</text>
+
+  <!-- ============ matrix outer container ============ -->
+  <rect x="160" y="100" width="1400" height="660" rx="8" ry="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+  <rect x="160" y="100" width="1400" height="660" fill="url(#grid-bg)"/>
+
+  <!-- ============ column headers (X axis) ============ -->
+  <g>
+    <rect x="160" y="100" width="350" height="40" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1"/>
+    <text x="335" y="125" font-size="13" font-weight="700" fill="#1E40AF" text-anchor="middle">软件套件 Software Suites</text>
+
+    <rect x="510" y="100" width="350" height="40" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1"/>
+    <text x="685" y="125" font-size="13" font-weight="700" fill="#9F1239" text-anchor="middle">硬件设备 Imager / Blocker / WS</text>
+
+    <rect x="860" y="100" width="350" height="40" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1"/>
+    <text x="1035" y="125" font-size="13" font-weight="700" fill="#92400E" text-anchor="middle">一体机 Turnkey Workstation</text>
+
+    <rect x="1210" y="100" width="350" height="40" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1"/>
+    <text x="1385" y="125" font-size="13" font-weight="700" fill="#065F46" text-anchor="middle">开源 Open Source</text>
+  </g>
+
+  <!-- ============ row headers (Y axis) ============ -->
+  <g>
+    <!-- Row 1 label: 国外 -->
+    <rect x="40" y="140" width="120" height="280" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="1"/>
+    <text x="100" y="270" font-size="14" font-weight="700" fill="#5B21B6" text-anchor="middle">国外</text>
+    <text x="100" y="290" font-size="11" fill="#7C3AED" text-anchor="middle">Overseas</text>
+    <text x="100" y="312" font-size="10" fill="#64748B" text-anchor="middle">美 / 加 / 德 / 以</text>
+    <text x="100" y="328" font-size="10" fill="#64748B" text-anchor="middle">深度成熟</text>
+    <text x="100" y="344" font-size="10" fill="#64748B" text-anchor="middle">价高 + 国际法庭</text>
+
+    <!-- Row 2 label: 国内 -->
+    <rect x="40" y="420" width="120" height="260" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1"/>
+    <text x="100" y="540" font-size="14" font-weight="700" fill="#9A3412" text-anchor="middle">国内</text>
+    <text x="100" y="560" font-size="11" fill="#C2410C" text-anchor="middle">Domestic</text>
+    <text x="100" y="582" font-size="10" fill="#64748B" text-anchor="middle">公安生态 + 信创</text>
+    <text x="100" y="598" font-size="10" fill="#64748B" text-anchor="middle">国产 App 解析</text>
+    <text x="100" y="614" font-size="10" fill="#64748B" text-anchor="middle">价格友好</text>
+
+    <!-- Row 3 label: 开源国际 -->
+    <rect x="40" y="680" width="120" height="80" fill="#ECFEFF" stroke="#A5F3FC" stroke-width="1"/>
+    <text x="100" y="715" font-size="14" font-weight="700" fill="#155E75" text-anchor="middle">开源国际</text>
+    <text x="100" y="732" font-size="11" fill="#0E7490" text-anchor="middle">OSS Community</text>
+    <text x="100" y="750" font-size="10" fill="#64748B" text-anchor="middle">免费 · 社区驱动</text>
+  </g>
+
+  <!-- ============ ROW 1 国外 × 软件套件 (X 160-510, Y 140-420) ============ -->
+  <g>
+    <!-- 🥇 Magnet AXIOM Cyber — Top 1 -->
+    <rect x="180" y="160" width="150" height="118" rx="6" ry="6" fill="#3B82F6" stroke="#1E40AF" stroke-width="1.5"/>
+    <text x="255" y="183" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">🥇 Magnet</text>
+    <text x="255" y="200" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">AXIOM Cyber</text>
+    <text x="255" y="219" font-size="10" fill="#BFDBFE" text-anchor="middle">远程 agent · Volatility</text>
+    <text x="255" y="234" font-size="10" fill="#BFDBFE" text-anchor="middle">MITRE ATT&amp;CK 映射</text>
+    <text x="255" y="254" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">$8-12k/席/年</text>
+    <text x="255" y="270" font-size="9" fill="#DBEAFE" text-anchor="middle">企业首选 · CA</text>
+
+    <!-- EnCase Forensic -->
+    <rect x="338" y="170" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.5"/>
+    <text x="413" y="192" font-size="12" font-weight="700" fill="#1E40AF" text-anchor="middle">EnCase Forensic</text>
+    <text x="413" y="210" font-size="10" fill="#64748B" text-anchor="middle">E01 标准制定者</text>
+    <text x="413" y="224" font-size="10" fill="#64748B" text-anchor="middle">EnScript 生态</text>
+    <text x="413" y="246" font-size="10" font-weight="700" fill="#1E40AF" text-anchor="middle">$4-8k/席/年</text>
+    <text x="413" y="260" font-size="9" fill="#94A3B8" text-anchor="middle">老钱 · OpenText</text>
+
+    <!-- FTK / Exterro -->
+    <rect x="180" y="295" width="150" height="98" rx="6" ry="6" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.5"/>
+    <text x="255" y="316" font-size="12" font-weight="700" fill="#1E40AF" text-anchor="middle">FTK / Enterprise</text>
+    <text x="255" y="334" font-size="10" fill="#64748B" text-anchor="middle">e-discovery 强项</text>
+    <text x="255" y="348" font-size="10" fill="#64748B" text-anchor="middle">Site Server · agent</text>
+    <text x="255" y="370" font-size="10" font-weight="700" fill="#1E40AF" text-anchor="middle">$2.2k/年订阅</text>
+    <text x="255" y="383" font-size="9" fill="#94A3B8" text-anchor="middle">Exterro · 法律强</text>
+
+    <!-- 🥈 X-Ways Forensics -->
+    <rect x="338" y="285" width="150" height="118" rx="6" ry="6" fill="#3B82F6" stroke="#1E40AF" stroke-width="1.5"/>
+    <text x="413" y="308" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">🥈 X-Ways</text>
+    <text x="413" y="325" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">Forensics</text>
+    <text x="413" y="344" font-size="10" fill="#BFDBFE" text-anchor="middle">文件系统覆盖最广</text>
+    <text x="413" y="359" font-size="10" fill="#BFDBFE" text-anchor="middle">XFS/Btrfs/ZFS/QNX</text>
+    <text x="413" y="378" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">~€1000 永久</text>
+    <text x="413" y="393" font-size="9" fill="#DBEAFE" text-anchor="middle">DE · 1/5 价位</text>
+  </g>
+
+  <!-- ============ ROW 1 国外 × 硬件设备 (X 510-860, Y 140-420) ============ -->
+  <g>
+    <!-- Tableau TX1/TX2 -->
+    <rect x="528" y="170" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.5"/>
+    <text x="603" y="192" font-size="12" font-weight="700" fill="#9F1239" text-anchor="middle">Tableau TX1/TX2</text>
+    <text x="603" y="210" font-size="10" fill="#64748B" text-anchor="middle">事实标准 Imager</text>
+    <text x="603" y="224" font-size="10" fill="#64748B" text-anchor="middle">~50 GB/min · 接口全</text>
+    <text x="603" y="246" font-size="10" font-weight="700" fill="#9F1239" text-anchor="middle">$5-8k</text>
+    <text x="603" y="260" font-size="9" fill="#94A3B8" text-anchor="middle">OpenText · 美</text>
+
+    <!-- 🥉 Logicube Falcon-NEO2 -->
+    <rect x="686" y="160" width="150" height="118" rx="6" ry="6" fill="#F43F5E" stroke="#9F1239" stroke-width="1.5"/>
+    <text x="761" y="183" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">🥉 Logicube</text>
+    <text x="761" y="200" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">Falcon-NEO2</text>
+    <text x="761" y="219" font-size="10" fill="#FFE4E6" text-anchor="middle">单点速度王</text>
+    <text x="761" y="234" font-size="10" fill="#FFE4E6" text-anchor="middle">115 GB/min · AFF4</text>
+    <text x="761" y="254" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">$8-10k</text>
+    <text x="761" y="270" font-size="9" fill="#FECDD3" text-anchor="middle">便携 + AFF4 原生</text>
+
+    <!-- Atola TaskForce 2 -->
+    <rect x="528" y="295" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.5"/>
+    <text x="603" y="316" font-size="12" font-weight="700" fill="#9F1239" text-anchor="middle">Atola TaskForce 2</text>
+    <text x="603" y="334" font-size="10" fill="#64748B" text-anchor="middle">26 端口并发吞吐</text>
+    <text x="603" y="348" font-size="10" fill="#64748B" text-anchor="middle">25 TB/h · 坏盘救援</text>
+    <text x="603" y="370" font-size="10" font-weight="700" fill="#9F1239" text-anchor="middle">$22k + Lifetime</text>
+    <text x="603" y="383" font-size="9" fill="#94A3B8" text-anchor="middle">塞浦路斯</text>
+
+    <!-- CRU WiebeTech FUDv6 -->
+    <rect x="686" y="295" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.5"/>
+    <text x="761" y="316" font-size="12" font-weight="700" fill="#9F1239" text-anchor="middle">CRU WiebeTech</text>
+    <text x="761" y="332" font-size="11" font-weight="600" fill="#9F1239" text-anchor="middle">UltraDock FUDv6</text>
+    <text x="761" y="350" font-size="10" fill="#64748B" text-anchor="middle">永久 WB · 防误操作</text>
+    <text x="761" y="370" font-size="10" font-weight="700" fill="#9F1239" text-anchor="middle">$433</text>
+    <text x="761" y="383" font-size="9" fill="#94A3B8" text-anchor="middle">Write Blocker 入门</text>
+  </g>
+
+  <!-- ============ ROW 1 国外 × 一体机 (X 860-1210, Y 140-420) ============ -->
+  <g>
+    <!-- Digital Intelligence FRED -->
+    <rect x="878" y="170" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.5"/>
+    <text x="953" y="192" font-size="12" font-weight="700" fill="#92400E" text-anchor="middle">FRED 系列</text>
+    <text x="953" y="210" font-size="10" fill="#64748B" text-anchor="middle">Digital Intelligence</text>
+    <text x="953" y="224" font-size="10" fill="#64748B" text-anchor="middle">UltraBay 4d · lifetime</text>
+    <text x="953" y="246" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">$7.7-10.6k</text>
+    <text x="953" y="260" font-size="9" fill="#94A3B8" text-anchor="middle">行业老大</text>
+
+    <!-- Sumuri TALINO -->
+    <rect x="1036" y="170" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.5"/>
+    <text x="1111" y="192" font-size="12" font-weight="700" fill="#92400E" text-anchor="middle">Sumuri TALINO</text>
+    <text x="1111" y="210" font-size="10" fill="#64748B" text-anchor="middle">价格区间最宽</text>
+    <text x="1111" y="224" font-size="10" fill="#64748B" text-anchor="middle">$3.3k → $70k</text>
+    <text x="1111" y="246" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">$3.3-23k</text>
+    <text x="1111" y="260" font-size="9" fill="#94A3B8" text-anchor="middle">TAA · 美</text>
+
+    <!-- Sumuri RECON ITR/Lab (macOS) -->
+    <rect x="878" y="295" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.5"/>
+    <text x="953" y="316" font-size="12" font-weight="700" fill="#92400E" text-anchor="middle">RECON ITR/Lab</text>
+    <text x="953" y="334" font-size="10" fill="#64748B" text-anchor="middle">macOS 唯一原生</text>
+    <text x="953" y="348" font-size="10" fill="#64748B" text-anchor="middle">T2 · APFS Snapshot</text>
+    <text x="953" y="370" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">Quote-only</text>
+    <text x="953" y="383" font-size="9" fill="#94A3B8" text-anchor="middle">Sumuri · 美</text>
+
+    <!-- Cellebrite Inspector -->
+    <rect x="1036" y="295" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FCD34D" stroke-width="1.5"/>
+    <text x="1111" y="316" font-size="12" font-weight="700" fill="#92400E" text-anchor="middle">Cellebrite Inspector</text>
+    <text x="1111" y="334" font-size="10" fill="#64748B" text-anchor="middle">前 BlackLight</text>
+    <text x="1111" y="348" font-size="10" fill="#64748B" text-anchor="middle">Mac heavy 团队</text>
+    <text x="1111" y="370" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">订阅制</text>
+    <text x="1111" y="383" font-size="9" fill="#94A3B8" text-anchor="middle">IL · 律所友好</text>
+  </g>
+
+  <!-- Row 1 supplementary 国外 软件 — Belkasoft / Passware overflow -->
+  <g>
+    <!-- 这两个产品已超出空间，放到 row1 软件套件区底部第三排 -->
+    <!-- 改为放在 row 1 软件套件区内的左下方扩展位 -->
+  </g>
+
+  <!-- ============ ROW 2 国内 × 软件套件 (X 160-510, Y 420-680) ============ -->
+  <g>
+    <!-- 🥇 美亚柏科 -->
+    <rect x="180" y="438" width="150" height="118" rx="6" ry="6" fill="#F97316" stroke="#9A3412" stroke-width="1.5"/>
+    <text x="255" y="461" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">🥇 美亚柏科</text>
+    <text x="255" y="478" font-size="11" font-weight="600" fill="#FFFFFF" text-anchor="middle">取证大师 V6</text>
+    <text x="255" y="497" font-size="10" fill="#FED7AA" text-anchor="middle">公安 58% 市占第一</text>
+    <text x="255" y="512" font-size="10" fill="#FED7AA" text-anchor="middle">信创原生 · App 解析</text>
+    <text x="255" y="532" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">3.5 万 / 套</text>
+    <text x="255" y="547" font-size="9" fill="#FFEDD5" text-anchor="middle">300188 · 17.69 亿/2024</text>
+
+    <!-- 🥈 奇安信盘古石 -->
+    <rect x="338" y="438" width="150" height="118" rx="6" ry="6" fill="#F97316" stroke="#9A3412" stroke-width="1.5"/>
+    <text x="413" y="461" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">🥈 盘古石</text>
+    <text x="413" y="478" font-size="11" font-weight="600" fill="#FFFFFF" text-anchor="middle">SafeAnalyzer</text>
+    <text x="413" y="497" font-size="10" fill="#FED7AA" text-anchor="middle">奇安信 · 漏洞思维</text>
+    <text x="413" y="512" font-size="10" fill="#FED7AA" text-anchor="middle">互联网客户响应快</text>
+    <text x="413" y="532" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">30-60 万 / 套</text>
+    <text x="413" y="547" font-size="9" fill="#FFEDD5" text-anchor="middle">HVV 友好</text>
+
+    <!-- 效率源 -->
+    <rect x="180" y="572" width="150" height="98" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="255" y="593" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">效率源 XLY</text>
+    <text x="255" y="611" font-size="10" fill="#64748B" text-anchor="middle">数据恢复起家</text>
+    <text x="255" y="625" font-size="10" fill="#64748B" text-anchor="middle">120 国客户 · 171 专利</text>
+    <text x="255" y="647" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">15-50 万</text>
+    <text x="255" y="660" font-size="9" fill="#94A3B8" text-anchor="middle">成都 · 国产 OS 首发</text>
+
+    <!-- 弘连 + 龙信 -->
+    <rect x="338" y="572" width="150" height="98" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="413" y="592" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">弘连 / 龙信</text>
+    <text x="413" y="608" font-size="10" fill="#64748B" text-anchor="middle">弘连·寻迹 XJ920</text>
+    <text x="413" y="622" font-size="10" fill="#64748B" text-anchor="middle">龙信·LX-A 系列</text>
+    <text x="413" y="641" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">20-40 万</text>
+    <text x="413" y="656" font-size="9" fill="#94A3B8" text-anchor="middle">公安部 2024 框采</text>
+  </g>
+
+  <!-- ============ ROW 2 国内 × 硬件 / 一体机 (X 510-1210, Y 420-680) ============ -->
+  <g>
+    <!-- 美亚 DC-4500/DC-8200 -->
+    <rect x="528" y="438" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="603" y="460" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">美亚 DC 系列</text>
+    <text x="603" y="478" font-size="10" fill="#64748B" text-anchor="middle">DC-4500 / DC-8200</text>
+    <text x="603" y="492" font-size="10" fill="#64748B" text-anchor="middle">高速镜像 · MagiCube</text>
+    <text x="603" y="514" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">20-80 万</text>
+    <text x="603" y="528" font-size="9" fill="#94A3B8" text-anchor="middle">国产 Imager 头部</text>
+
+    <!-- 美亚 MagiCube + Qiko -->
+    <rect x="686" y="438" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="761" y="460" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">美亚 Qiko 一体机</text>
+    <text x="761" y="478" font-size="10" fill="#64748B" text-anchor="middle">2024 Q4 大模型</text>
+    <text x="761" y="492" font-size="10" fill="#64748B" text-anchor="middle">70 亿参数公安 LLM</text>
+    <text x="761" y="514" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">Quote-only</text>
+    <text x="761" y="528" font-size="9" fill="#94A3B8" text-anchor="middle">AI + 取证</text>
+
+    <!-- 盘古石取证战星 -->
+    <rect x="878" y="438" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="953" y="460" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">盘古石 取证战星</text>
+    <text x="953" y="478" font-size="10" fill="#64748B" text-anchor="middle">综合一体机</text>
+    <text x="953" y="492" font-size="10" fill="#64748B" text-anchor="middle">SafeImager + 模块</text>
+    <text x="953" y="514" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">30-60 万</text>
+    <text x="953" y="528" font-size="9" fill="#94A3B8" text-anchor="middle">奇安信 · 信创</text>
+
+    <!-- 弘连 MT510 / XJ920 -->
+    <rect x="1036" y="438" width="150" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="1111" y="460" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">弘连 MT510 / XJ920</text>
+    <text x="1111" y="478" font-size="10" fill="#64748B" text-anchor="middle">寻迹大数据分析</text>
+    <text x="1111" y="492" font-size="10" fill="#64748B" text-anchor="middle">关系图谱 + AI</text>
+    <text x="1111" y="514" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">20-40 万</text>
+    <text x="1111" y="528" font-size="9" fill="#94A3B8" text-anchor="middle">司法鉴定一体化</text>
+
+    <!-- 龙信 LX-A501 Pro -->
+    <rect x="528" y="572" width="150" height="98" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="603" y="592" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">龙信 LX-A501</text>
+    <text x="603" y="608" font-size="10" fill="#64748B" text-anchor="middle">物联网取证工作站</text>
+    <text x="603" y="622" font-size="10" fill="#64748B" text-anchor="middle">路由器 / 摄像头</text>
+    <text x="603" y="641" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">Quote-only</text>
+    <text x="603" y="656" font-size="9" fill="#94A3B8" text-anchor="middle">苏州 · 公安部框采</text>
+
+    <!-- 效率源应急包 -->
+    <rect x="686" y="572" width="150" height="98" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.5"/>
+    <text x="761" y="592" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">效率源应急包</text>
+    <text x="761" y="608" font-size="10" fill="#64748B" text-anchor="middle">突发现场取证</text>
+    <text x="761" y="622" font-size="10" fill="#64748B" text-anchor="middle">AMF9300 · 极光</text>
+    <text x="761" y="641" font-size="10" font-weight="700" fill="#9A3412" text-anchor="middle">15-30 万</text>
+    <text x="761" y="656" font-size="9" fill="#94A3B8" text-anchor="middle">FRS 数据恢复</text>
+
+    <!-- 四川金舟 / 安天 / 国保金泰 -->
+    <rect x="878" y="572" width="150" height="98" rx="6" ry="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="953" y="592" font-size="12" font-weight="700" fill="#64748B" text-anchor="middle">边缘玩家</text>
+    <text x="953" y="608" font-size="10" fill="#64748B" text-anchor="middle">四川金舟 / 齐力软件</text>
+    <text x="953" y="622" font-size="10" fill="#64748B" text-anchor="middle">公开资料稀少</text>
+    <text x="953" y="641" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">不推荐</text>
+    <text x="953" y="656" font-size="9" fill="#94A3B8" text-anchor="middle">完整性列出</text>
+
+    <rect x="1036" y="572" width="150" height="98" rx="6" ry="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="1111" y="592" font-size="12" font-weight="700" fill="#64748B" text-anchor="middle">取证副业</text>
+    <text x="1111" y="608" font-size="10" fill="#64748B" text-anchor="middle">安天 AVL / 探海</text>
+    <text x="1111" y="622" font-size="10" fill="#64748B" text-anchor="middle">国保金泰 · 隔离导入</text>
+    <text x="1111" y="641" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">非主营取证</text>
+    <text x="1111" y="656" font-size="9" fill="#94A3B8" text-anchor="middle">能力延伸</text>
+  </g>
+
+  <!-- 国外软件套件第三排 — Belkasoft / Cellebrite / Passware / RECON -->
+  <g>
+    <!-- 这区已在国外硬件列中布置 RECON / Cellebrite，现补 Belkasoft + Passware 在国外一体机列底部 -->
+    <!-- Belkasoft 放在国外一体机区下方需要更紧凑 -->
+  </g>
+
+  <!-- ============ ROW 1 supplementary cards (Belkasoft + Passware 移到此处) ============ -->
+  <!-- 实际上空间不够，将 Belkasoft + Passware 嵌入到顶部第二排软件套件下方 -->
+
+  <!-- ============ ROW 3 开源国际 (X 160-1560, Y 680-760) ============ -->
+  <g>
+    <!-- Autopsy + Sleuth Kit -->
+    <rect x="180" y="688" width="160" height="62" rx="6" ry="6" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5"/>
+    <text x="260" y="708" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Autopsy + Sleuth Kit</text>
+    <text x="260" y="722" font-size="10" fill="#64748B" text-anchor="middle">磁盘 / 文件系统主战场</text>
+    <text x="260" y="740" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">免费 · BSL</text>
+
+    <!-- Volatility 3 -->
+    <rect x="350" y="688" width="160" height="62" rx="6" ry="6" fill="#10B981" stroke="#065F46" stroke-width="1.5"/>
+    <text x="430" y="708" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">🥇 Volatility 3</text>
+    <text x="430" y="722" font-size="10" fill="#D1FAE5" text-anchor="middle">内存取证唯一公认标准</text>
+    <text x="430" y="740" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">免费 · GPL-2</text>
+
+    <!-- Velociraptor -->
+    <rect x="520" y="688" width="160" height="62" rx="6" ry="6" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5"/>
+    <text x="600" y="708" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Velociraptor</text>
+    <text x="600" y="722" font-size="10" fill="#64748B" text-anchor="middle">Fleet 级 IR · VQL</text>
+    <text x="600" y="740" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">免费 · AGPL</text>
+
+    <!-- KAPE -->
+    <rect x="690" y="688" width="160" height="62" rx="6" ry="6" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5"/>
+    <text x="770" y="708" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">KAPE</text>
+    <text x="770" y="722" font-size="10" fill="#64748B" text-anchor="middle">Windows triage 标杆</text>
+    <text x="770" y="740" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">免费 · EULA</text>
+
+    <!-- Plaso/Timesketch -->
+    <rect x="860" y="688" width="160" height="62" rx="6" ry="6" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5"/>
+    <text x="940" y="708" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Plaso + Timesketch</text>
+    <text x="940" y="722" font-size="10" fill="#64748B" text-anchor="middle">Super timeline 汇总台</text>
+    <text x="940" y="740" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">免费 · Apache 2</text>
+
+    <!-- osquery + FleetDM -->
+    <rect x="1030" y="688" width="160" height="62" rx="6" ry="6" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5"/>
+    <text x="1110" y="708" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">osquery + FleetDM</text>
+    <text x="1110" y="722" font-size="10" fill="#64748B" text-anchor="middle">实时端点查询</text>
+    <text x="1110" y="740" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">免费 · Apache 2</text>
+
+    <!-- FTK Imager / UAC / CyLR -->
+    <rect x="1200" y="688" width="160" height="62" rx="6" ry="6" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5"/>
+    <text x="1280" y="708" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">FTK Imager · UAC</text>
+    <text x="1280" y="722" font-size="10" fill="#64748B" text-anchor="middle">采集 / CyLR Unix-like</text>
+    <text x="1280" y="740" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">免费 · 多许可</text>
+
+    <!-- bulk_extractor / PhotoRec -->
+    <rect x="1370" y="688" width="170" height="62" rx="6" ry="6" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5"/>
+    <text x="1455" y="708" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">bulk_extractor · PhotoRec</text>
+    <text x="1455" y="722" font-size="10" fill="#64748B" text-anchor="middle">Carving + IoC 抽取</text>
+    <text x="1455" y="740" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">免费 · 公共领域</text>
+  </g>
+
+  <!-- ============ 补 Belkasoft + Passware 等遗漏的国外软件套件，放在右侧空白 ============ -->
+  <g>
+    <!-- Belkasoft -->
+    <rect x="1200" y="170" width="160" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#A7F3D0" stroke-width="1.5"/>
+    <text x="1280" y="192" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Belkasoft X</text>
+    <text x="1280" y="210" font-size="10" fill="#64748B" text-anchor="middle">性价比之王 · 俄/新</text>
+    <text x="1280" y="224" font-size="10" fill="#64748B" text-anchor="middle">BelkaGPT + AI 全栈</text>
+    <text x="1280" y="246" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">€6,499 / 年</text>
+    <text x="1280" y="260" font-size="9" fill="#94A3B8" text-anchor="middle">地缘政治风险</text>
+
+    <!-- Passware -->
+    <rect x="1370" y="170" width="170" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#A7F3D0" stroke-width="1.5"/>
+    <text x="1455" y="192" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Passware Kit</text>
+    <text x="1455" y="210" font-size="10" fill="#64748B" text-anchor="middle">密码 / 全盘破解专项</text>
+    <text x="1455" y="224" font-size="10" fill="#64748B" text-anchor="middle">BitLocker TPM/PXE</text>
+    <text x="1455" y="246" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">$2-5k</text>
+    <text x="1455" y="260" font-size="9" fill="#94A3B8" text-anchor="middle">外科手术刀</text>
+
+    <!-- Paraben + 备注 -->
+    <rect x="1200" y="295" width="160" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#A7F3D0" stroke-width="1.5"/>
+    <text x="1280" y="316" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Paraben E3</text>
+    <text x="1280" y="334" font-size="10" fill="#64748B" text-anchor="middle">小机构平价多源</text>
+    <text x="1280" y="348" font-size="10" fill="#64748B" text-anchor="middle">v4.5 Dilithium</text>
+    <text x="1280" y="370" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">订阅 ≈ 永久 20%</text>
+    <text x="1280" y="383" font-size="9" fill="#94A3B8" text-anchor="middle">缺 XFS/Btrfs</text>
+
+    <!-- Forensic Computers (Phantym-DX) -->
+    <rect x="1370" y="295" width="170" height="100" rx="6" ry="6" fill="#FFFFFF" stroke="#A7F3D0" stroke-width="1.5"/>
+    <text x="1455" y="316" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">Phantym-DX</text>
+    <text x="1455" y="334" font-size="10" fill="#64748B" text-anchor="middle">Forensic Computers</text>
+    <text x="1455" y="348" font-size="10" fill="#64748B" text-anchor="middle">双 Xeon + 128GB ECC</text>
+    <text x="1455" y="370" font-size="10" font-weight="700" fill="#065F46" text-anchor="middle">$15-20k</text>
+    <text x="1455" y="383" font-size="9" fill="#94A3B8" text-anchor="middle">联邦机构友好</text>
+  </g>
+
+  <!-- ============ Top 3 推荐分类标签 ============ -->
+  <g>
+    <text x="1200" y="438" font-size="11" font-weight="700" fill="#64748B">右栏：国外补充</text>
+    <line x1="1200" y1="446" x2="1540" y2="446" stroke="#CBD5E1" stroke-width="0.8" stroke-dasharray="3 2"/>
+    <text x="1200" y="468" font-size="10" fill="#94A3B8">软件 4 / 套件 + 1 一体机补 = 9 国外厂商</text>
+    <text x="1200" y="484" font-size="10" fill="#94A3B8">国外 = 软件 6 + 硬件 4 + 一体机 4 = 14 家</text>
+    <text x="1200" y="500" font-size="10" fill="#94A3B8">国内 = 软件 4 + 一体机 6 + 边缘 2 = 8 家</text>
+    <text x="1200" y="516" font-size="10" fill="#94A3B8">开源 = 7 家 · 总 25+ 厂商 / 工具</text>
+  </g>
+
+  <!-- ============ 图例 ============ -->
+  <g transform="translate(40, 790)">
+    <text x="0" y="0" font-size="13" font-weight="700" fill="#1E293B">图例 · 卡片高度编码</text>
+
+    <!-- Top 3 sample -->
+    <rect x="120" y="-12" width="80" height="32" rx="4" ry="4" fill="#3B82F6"/>
+    <text x="160" y="6" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">🥇🥈🥉</text>
+    <text x="160" y="20" font-size="9" fill="#BFDBFE" text-anchor="middle">Top 3 高 118px</text>
+
+    <!-- 普通厂商 -->
+    <rect x="220" y="-8" width="80" height="28" rx="4" ry="4" fill="#FFFFFF" stroke="#94A3B8" stroke-width="1.2"/>
+    <text x="260" y="10" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">普通</text>
+    <text x="260" y="22" font-size="9" fill="#94A3B8" text-anchor="middle">高 98-100px</text>
+
+    <!-- 边缘玩家 -->
+    <rect x="320" y="-8" width="80" height="28" rx="4" ry="4" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3 2"/>
+    <text x="360" y="10" font-size="10" font-weight="600" fill="#94A3B8" text-anchor="middle">边缘</text>
+    <text x="360" y="22" font-size="9" fill="#94A3B8" text-anchor="middle">虚线 · 不推荐</text>
+
+    <!-- 颜色编码 -->
+    <text x="430" y="0" font-size="11" font-weight="700" fill="#1E293B">原产国色相</text>
+    <rect x="540" y="-10" width="20" height="20" rx="3" fill="#3B82F6"/>
+    <text x="565" y="4" font-size="10" fill="#64748B">国外</text>
+    <rect x="600" y="-10" width="20" height="20" rx="3" fill="#F97316"/>
+    <text x="625" y="4" font-size="10" fill="#64748B">国内</text>
+    <rect x="660" y="-10" width="20" height="20" rx="3" fill="#10B981"/>
+    <text x="685" y="4" font-size="10" fill="#64748B">开源国际</text>
+  </g>
+
+  <!-- ============ 关键洞察 footnote ============ -->
+  <g>
+    <rect x="780" y="780" width="780" height="80" rx="6" ry="6" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1"/>
+    <text x="800" y="800" font-size="11" font-weight="700" fill="#92400E">采购优先级判断（Top 3）</text>
+    <text x="800" y="820" font-size="10" fill="#78350F">🥇 远程 agent 是企业取证&quot;门票&quot;→ <tspan font-weight="700">AXIOM Cyber</tspan>（首选）/ 美亚柏科（信创）/ 盘古石（HVV）</text>
+    <text x="800" y="836" font-size="10" fill="#78350F">🥈 文件系统覆盖最广 → <tspan font-weight="700">X-Ways</tspan>（1/5 价位 + XFS/Btrfs/ZFS） · 单点速度 → <tspan font-weight="700">Logicube</tspan> · 开源 → <tspan font-weight="700">Volatility 3</tspan></text>
+    <text x="800" y="852" font-size="10" fill="#78350F">🥉 国内首选组合：美亚（信创合规）+ 盘古石（互联网响应）+ 效率源（数据恢复） · 头部互联网公司双栈：国内 + 国外</text>
+  </g>
+</svg>
+      </div>
+      <figcaption style="margin-top:8px;color:var(--text-secondary);font-size:0.9em;text-align:center;">图 2 — 25 家厂商分布矩阵。X 轴产品形态（软件套件 / 硬件 / 一体机 / 开源），Y 轴原产国。卡片高度编码采购优先级（Top 3 高 + 🥇🥈🥉，普通同高，边缘虚线灰）。 <a href="figures/INDEX.md" style="color:var(--accent);">设计说明 (INDEX.md)</a></figcaption>
+    </figure>
+
     <p class="sub-title">合并子报告 ①②③ 的厂商，按原产国 / 类别筛选，点击表头排序。</p>
 
     <div class="filter-bar">
@@ -985,6 +1410,379 @@ tbody tr:hover { background: var(--bg-3); }
     <h2>跨报告整合 — 6 层 + 7 专项技术栈速查 <a href="#tech-stack" class="anchor">¶</a></h2>
     <p class="sub-title">合并 Report 04 的 13 个章节为可折叠快速索引。点击展开看推荐工具。</p>
 
+    <figure style="margin:24px 0;">
+      <div style="width:100%;max-width:1600px;background:#fff;border-radius:8px;overflow:auto;" role="img" aria-label="6 层取证技术栈架构图：L1 内存 / L2 磁盘+文件系统 / L3 时间线 / L4 Artifact 收集 / L5 Chain-of-Custody / L6 容器云原生，含 7 个专项支线"><svg style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" font-family="'PingFang SC', 'Inter', -apple-system, 'Segoe UI', sans-serif">
+  <!-- ============ defs ============ -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="9" markerHeight="8" orient="auto">
+      <path d="M0,0 L12,5 L0,10 z" fill="#64748B"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="9" markerHeight="8" orient="auto">
+      <path d="M0,0 L12,5 L0,10 z" fill="#3B82F6"/>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="9" markerHeight="8" orient="auto">
+      <path d="M0,0 L12,5 L0,10 z" fill="#F59E0B"/>
+    </marker>
+    <marker id="arrow-dashed" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="8" markerHeight="7" orient="auto">
+      <path d="M0,0 L12,5 L0,10 z" fill="#94A3B8"/>
+    </marker>
+  </defs>
+
+  <!-- ============ canvas bg ============ -->
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+
+  <!-- ============ title block ============ -->
+  <text x="40" y="42" font-size="22" font-weight="700" fill="#0F172A">离线取证技术栈架构 — 6 层方法学 × 7 个专项支线</text>
+  <text x="40" y="66" font-size="13" fill="#64748B">数据流：L4 Triage 入口 → L1 内存 / L2 磁盘 → L3 时间线汇总 → 事件根因报告；L5 横切纪律；L6 容器云原生分支</text>
+
+  <!-- ============ L5 横切纪律（左纵列） ============ -->
+  <g>
+    <rect x="40" y="100" width="170" height="660" rx="8" ry="8" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1"/>
+    <rect x="40" y="100" width="170" height="44" rx="8" ry="8" fill="#9F1239"/>
+    <rect x="40" y="124" width="170" height="20" fill="#9F1239"/>
+    <text x="56" y="120" font-size="13" font-weight="700" fill="#FFFFFF">L5 · Chain-of-Custody</text>
+    <text x="56" y="138" font-size="10" fill="#FECDD3">横切纪律（贯穿全栈）</text>
+
+    <!-- pills -->
+    <g>
+      <rect x="56" y="160" width="138" height="28" rx="14" ry="14" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.2"/>
+      <text x="125" y="178" font-size="12" fill="#9F1239" text-anchor="middle">SHA-256 双副本</text>
+    </g>
+    <g>
+      <rect x="56" y="196" width="138" height="28" rx="14" ry="14" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.2"/>
+      <text x="125" y="214" font-size="12" fill="#9F1239" text-anchor="middle">Write Blocker 只读</text>
+    </g>
+    <g>
+      <rect x="56" y="232" width="138" height="28" rx="14" ry="14" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.2"/>
+      <text x="125" y="250" font-size="12" fill="#9F1239" text-anchor="middle">采集者 + UTC 时戳</text>
+    </g>
+    <g>
+      <rect x="56" y="268" width="138" height="28" rx="14" ry="14" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.2"/>
+      <text x="125" y="286" font-size="12" fill="#9F1239" text-anchor="middle">访问审计日志</text>
+    </g>
+    <g>
+      <rect x="56" y="304" width="138" height="28" rx="14" ry="14" fill="#FFFFFF" stroke="#FDA4AF" stroke-width="1.2"/>
+      <text x="125" y="322" font-size="12" fill="#9F1239" text-anchor="middle">金本 + 工作副本</text>
+    </g>
+
+    <!-- 横切箭头（指向主流，提示「贯穿全栈」） -->
+    <g stroke="#9F1239" stroke-width="1" stroke-dasharray="4 3" fill="none" opacity="0.55">
+      <line x1="210" y1="200" x2="248" y2="200" marker-end="url(#arrow-dashed)"/>
+      <line x1="210" y1="350" x2="248" y2="350" marker-end="url(#arrow-dashed)"/>
+      <line x1="210" y1="500" x2="248" y2="500" marker-end="url(#arrow-dashed)"/>
+      <line x1="210" y1="640" x2="248" y2="640" marker-end="url(#arrow-dashed)"/>
+    </g>
+
+    <!-- 时延标签 -->
+    <text x="125" y="730" font-size="10" fill="#9F1239" text-anchor="middle" font-weight="600">复杂度：低　价值：极高</text>
+    <text x="125" y="750" font-size="10" fill="#94A3B8" text-anchor="middle">不可逆操作 = 证据失效</text>
+  </g>
+
+  <!-- ============ 主流第 1 行：L4 Triage 入口（横跨中间） ============ -->
+  <g>
+    <rect x="260" y="100" width="980" height="120" rx="8" ry="8" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="1"/>
+    <rect x="260" y="100" width="220" height="44" rx="8" ry="8" fill="#5B21B6"/>
+    <rect x="260" y="124" width="220" height="20" fill="#5B21B6"/>
+    <text x="276" y="120" font-size="13" font-weight="700" fill="#FFFFFF">L4 · Artifact 收集 / Triage</text>
+    <text x="276" y="138" font-size="10" fill="#C4B5FD">入口层｜分钟级｜不深度分析</text>
+
+    <!-- 工具 pills -->
+    <g>
+      <rect x="500" y="156" width="160" height="56" rx="6" ry="6" fill="#FFFFFF" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="580" y="177" font-size="13" font-weight="600" fill="#5B21B6" text-anchor="middle">KAPE</text>
+      <text x="580" y="196" font-size="11" fill="#64748B" text-anchor="middle">Windows triage 业界标杆</text>
+    </g>
+    <g>
+      <rect x="676" y="156" width="160" height="56" rx="6" ry="6" fill="#FFFFFF" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="756" y="177" font-size="13" font-weight="600" fill="#5B21B6" text-anchor="middle">Velociraptor</text>
+      <text x="756" y="196" font-size="11" fill="#64748B" text-anchor="middle">offline collector · fleet 级</text>
+    </g>
+    <g>
+      <rect x="852" y="156" width="160" height="56" rx="6" ry="6" fill="#FFFFFF" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="932" y="177" font-size="13" font-weight="600" fill="#5B21B6" text-anchor="middle">CyLR</text>
+      <text x="932" y="196" font-size="11" fill="#64748B" text-anchor="middle">跨平台 Win/Linux/Mac</text>
+    </g>
+    <g>
+      <rect x="1028" y="156" width="160" height="56" rx="6" ry="6" fill="#FFFFFF" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="1108" y="177" font-size="13" font-weight="600" fill="#5B21B6" text-anchor="middle">UAC</text>
+      <text x="1108" y="196" font-size="11" fill="#64748B" text-anchor="middle">Unix-like（Linux/AIX/BSD）</text>
+    </g>
+  </g>
+
+  <!-- 箭头：L4 → L1 / L2 / L6 -->
+  <g fill="none" stroke="#3B82F6" stroke-width="2">
+    <path d="M 580 220 L 580 244" marker-end="url(#arrow-blue)"/>
+    <path d="M 932 220 L 932 244" marker-end="url(#arrow-blue)"/>
+    <path d="M 1190 184 Q 1300 184 1300 244" marker-end="url(#arrow-blue)"/>
+  </g>
+  <text x="485" y="234" font-size="10" fill="#3B82F6" font-weight="600">冷冻 artifact</text>
+  <text x="840" y="234" font-size="10" fill="#3B82F6" font-weight="600">磁盘 image</text>
+  <text x="1230" y="228" font-size="10" fill="#3B82F6" font-weight="600">容器 / 云</text>
+
+  <!-- ============ 主流第 2 行：L1 内存 + L2 磁盘（并列） ============ -->
+  <!-- L1 -->
+  <g>
+    <rect x="260" y="250" width="460" height="180" rx="8" ry="8" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1"/>
+    <rect x="260" y="250" width="180" height="44" rx="8" ry="8" fill="#1E40AF"/>
+    <rect x="260" y="274" width="180" height="20" fill="#1E40AF"/>
+    <text x="276" y="270" font-size="13" font-weight="700" fill="#FFFFFF">L1 · 内存取证</text>
+    <text x="276" y="288" font-size="10" fill="#BFDBFE">易失｜小时级｜难度高</text>
+
+    <g>
+      <rect x="280" y="310" width="135" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5"/>
+      <text x="347" y="329" font-size="12" font-weight="600" fill="#1E40AF" text-anchor="middle">WinPmem</text>
+      <text x="347" y="347" font-size="10" fill="#64748B" text-anchor="middle">Windows 采集</text>
+    </g>
+    <g>
+      <rect x="425" y="310" width="135" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5"/>
+      <text x="492" y="329" font-size="12" font-weight="600" fill="#1E40AF" text-anchor="middle">AVML / LiME</text>
+      <text x="492" y="347" font-size="10" fill="#64748B" text-anchor="middle">Linux 采集</text>
+    </g>
+    <g>
+      <rect x="570" y="310" width="135" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5"/>
+      <text x="637" y="329" font-size="12" font-weight="600" fill="#1E40AF" text-anchor="middle">DumpIt</text>
+      <text x="637" y="347" font-size="10" fill="#64748B" text-anchor="middle">单文件 zero-config</text>
+    </g>
+    <g>
+      <rect x="280" y="368" width="280" height="50" rx="6" ry="6" fill="#3B82F6" stroke="none"/>
+      <text x="420" y="387" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Volatility 3</text>
+      <text x="420" y="405" font-size="10" fill="#DBEAFE" text-anchor="middle">malfind · netscan · pslist · FVEK extraction</text>
+    </g>
+    <g>
+      <rect x="570" y="368" width="135" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5" stroke-dasharray="4 2"/>
+      <text x="637" y="387" font-size="11" font-weight="600" fill="#1E40AF" text-anchor="middle">Java 内存马</text>
+      <text x="637" y="404" font-size="10" fill="#64748B" text-anchor="middle">arthas / jmap</text>
+    </g>
+  </g>
+
+  <!-- L2 -->
+  <g>
+    <rect x="740" y="250" width="500" height="180" rx="8" ry="8" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1"/>
+    <rect x="740" y="250" width="220" height="44" rx="8" ry="8" fill="#065F46"/>
+    <rect x="740" y="274" width="220" height="20" fill="#065F46"/>
+    <text x="756" y="270" font-size="13" font-weight="700" fill="#FFFFFF">L2 · 磁盘 + 文件系统</text>
+    <text x="756" y="288" font-size="10" fill="#A7F3D0">主战场｜天-周级｜80% 工时</text>
+
+    <g>
+      <rect x="760" y="310" width="150" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#34D399" stroke-width="1.5"/>
+      <text x="835" y="329" font-size="12" font-weight="600" fill="#065F46" text-anchor="middle">FTK Imager</text>
+      <text x="835" y="347" font-size="10" fill="#64748B" text-anchor="middle">镜像 E01 / raw</text>
+    </g>
+    <g>
+      <rect x="920" y="310" width="150" height="50" rx="6" ry="6" fill="#10B981" stroke="none"/>
+      <text x="995" y="329" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Autopsy 4.21+</text>
+      <text x="995" y="347" font-size="10" fill="#D1FAE5" text-anchor="middle">首选 GUI · TSK 引擎</text>
+    </g>
+    <g>
+      <rect x="1080" y="310" width="150" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#34D399" stroke-width="1.5"/>
+      <text x="1155" y="329" font-size="12" font-weight="600" fill="#065F46" text-anchor="middle">The Sleuth Kit</text>
+      <text x="1155" y="347" font-size="10" fill="#64748B" text-anchor="middle">fls / icat / mmls</text>
+    </g>
+
+    <g>
+      <rect x="760" y="368" width="150" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#34D399" stroke-width="1.5"/>
+      <text x="835" y="387" font-size="12" font-weight="600" fill="#065F46" text-anchor="middle">MFTECmd</text>
+      <text x="835" y="404" font-size="10" fill="#64748B" text-anchor="middle">$MFT · $UsnJrnl · $LogFile</text>
+    </g>
+    <g>
+      <rect x="920" y="368" width="150" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#34D399" stroke-width="1.5"/>
+      <text x="995" y="387" font-size="12" font-weight="600" fill="#065F46" text-anchor="middle">PhotoRec</text>
+      <text x="995" y="404" font-size="10" fill="#64748B" text-anchor="middle">Carving · 480+ 签名</text>
+    </g>
+    <g>
+      <rect x="1080" y="368" width="150" height="50" rx="6" ry="6" fill="#FFFFFF" stroke="#34D399" stroke-width="1.5"/>
+      <text x="1155" y="387" font-size="12" font-weight="600" fill="#065F46" text-anchor="middle">bulk_extractor</text>
+      <text x="1155" y="404" font-size="10" fill="#64748B" text-anchor="middle">pattern 抽取</text>
+    </g>
+  </g>
+
+  <!-- ============ L6 容器云原生（右纵列） ============ -->
+  <g>
+    <rect x="1260" y="100" width="300" height="330" rx="8" ry="8" fill="#ECFEFF" stroke="#A5F3FC" stroke-width="1"/>
+    <rect x="1260" y="100" width="300" height="44" rx="8" ry="8" fill="#155E75"/>
+    <rect x="1260" y="124" width="300" height="20" fill="#155E75"/>
+    <text x="1276" y="120" font-size="13" font-weight="700" fill="#FFFFFF">L6 · 容器 + 云原生</text>
+    <text x="1276" y="138" font-size="10" fill="#A5F3FC">秒级生命周期｜审计日志关键</text>
+
+    <g>
+      <rect x="1280" y="156" width="260" height="44" rx="6" ry="6" fill="#FFFFFF" stroke="#67E8F9" stroke-width="1.5"/>
+      <text x="1410" y="174" font-size="12" font-weight="600" fill="#155E75" text-anchor="middle">K8s audit log + etcd snapshot</text>
+      <text x="1410" y="190" font-size="10" fill="#64748B" text-anchor="middle">apiserver --audit-policy-file</text>
+    </g>
+    <g>
+      <rect x="1280" y="208" width="260" height="44" rx="6" ry="6" fill="#FFFFFF" stroke="#67E8F9" stroke-width="1.5"/>
+      <text x="1410" y="226" font-size="12" font-weight="600" fill="#155E75" text-anchor="middle">crictl / kubectl + checkpoint</text>
+      <text x="1410" y="242" font-size="10" fill="#64748B" text-anchor="middle">K8s 1.25+ Forensic Checkpoint</text>
+    </g>
+    <g>
+      <rect x="1280" y="260" width="260" height="44" rx="6" ry="6" fill="#FFFFFF" stroke="#67E8F9" stroke-width="1.5"/>
+      <text x="1410" y="278" font-size="12" font-weight="600" fill="#155E75" text-anchor="middle">CloudTrail / M365 UAL / GCP</text>
+      <text x="1410" y="294" font-size="10" fill="#64748B" text-anchor="middle">API 全审计 · 90/180 天默认</text>
+    </g>
+    <g>
+      <rect x="1280" y="312" width="260" height="44" rx="6" ry="6" fill="#FFFFFF" stroke="#67E8F9" stroke-width="1.5"/>
+      <text x="1410" y="330" font-size="12" font-weight="600" fill="#155E75" text-anchor="middle">VMDK / VHDX / vmem snapshot</text>
+      <text x="1410" y="346" font-size="10" fill="#64748B" text-anchor="middle">hypervisor god mode</text>
+    </g>
+    <text x="1410" y="395" font-size="10" fill="#155E75" text-anchor="middle" font-weight="600">复杂度：高　L1-L4 工具部分失效</text>
+    <text x="1410" y="415" font-size="10" fill="#94A3B8" text-anchor="middle">必须靠 audit log 补齐</text>
+  </g>
+
+  <!-- 箭头：L1 → L3, L2 → L3, L6 → L3 -->
+  <g fill="none" stroke="#F59E0B" stroke-width="2">
+    <path d="M 420 430 L 420 470" marker-end="url(#arrow-amber)"/>
+    <path d="M 995 430 L 995 470" marker-end="url(#arrow-amber)"/>
+    <path d="M 1410 430 Q 1410 470 1180 480" marker-end="url(#arrow-amber)"/>
+  </g>
+  <text x="345" y="455" font-size="10" fill="#F59E0B" font-weight="600">runtime artifact</text>
+  <text x="900" y="455" font-size="10" fill="#F59E0B" font-weight="600">disk artifact</text>
+  <text x="1250" y="465" font-size="10" fill="#F59E0B" font-weight="600">cloud event</text>
+
+  <!-- ============ 主流第 3 行：L3 时间线（汇总台） ============ -->
+  <g>
+    <rect x="260" y="480" width="980" height="140" rx="8" ry="8" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1"/>
+    <rect x="260" y="480" width="240" height="44" rx="8" ry="8" fill="#92400E"/>
+    <rect x="260" y="504" width="240" height="20" fill="#92400E"/>
+    <text x="276" y="500" font-size="13" font-weight="700" fill="#FFFFFF">L3 · 时间线（Super-Timeline）</text>
+    <text x="276" y="518" font-size="10" fill="#FDE68A">分析者工作台｜小时级</text>
+
+    <g>
+      <rect x="476" y="530" width="220" height="76" rx="6" ry="6" fill="#FFFFFF" stroke="#FBBF24" stroke-width="1.5"/>
+      <text x="586" y="552" font-size="13" font-weight="700" fill="#92400E" text-anchor="middle">Plaso (log2timeline)</text>
+      <text x="586" y="572" font-size="11" fill="#64748B" text-anchor="middle">250+ parser · normalize 引擎</text>
+      <text x="586" y="591" font-size="10" fill="#94A3B8" text-anchor="middle">.plaso 格式 → psort 输出</text>
+    </g>
+    <g>
+      <rect x="716" y="530" width="220" height="76" rx="6" ry="6" fill="#F59E0B" stroke="none"/>
+      <text x="826" y="552" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Timesketch</text>
+      <text x="826" y="572" font-size="11" fill="#FEF3C7" text-anchor="middle">可视化 · 多人协作 · ES 后端</text>
+      <text x="826" y="591" font-size="10" fill="#FDE68A" text-anchor="middle">analyzer / sketch / story</text>
+    </g>
+    <g>
+      <rect x="956" y="530" width="220" height="76" rx="6" ry="6" fill="#FFFFFF" stroke="#FBBF24" stroke-width="1.5"/>
+      <text x="1066" y="552" font-size="13" font-weight="700" fill="#92400E" text-anchor="middle">DFIR-IRIS</text>
+      <text x="1066" y="572" font-size="11" fill="#64748B" text-anchor="middle">case management</text>
+      <text x="1066" y="591" font-size="10" fill="#94A3B8" text-anchor="middle">关联 case / IOC / asset</text>
+    </g>
+  </g>
+
+  <!-- 箭头：L3 → 报告 -->
+  <g fill="none" stroke="#0F172A" stroke-width="2.5">
+    <path d="M 750 620 L 750 660" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- ============ 终态：事件根因报告（document 形状） ============ -->
+  <g>
+    <path d="M 580 660 L 920 660 L 920 730 Q 850 745 750 738 Q 650 731 580 740 Z" fill="#1E293B" stroke="none"/>
+    <text x="750" y="688" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle">事件根因报告</text>
+    <text x="750" y="710" font-size="11" fill="#CBD5E1" text-anchor="middle">时间线 + IOC + 影响面 + 法务交付物</text>
+  </g>
+
+  <!-- ============ 7 个专项支线（底部横条） ============ -->
+  <g>
+    <rect x="40" y="780" width="1520" height="100" rx="8" ry="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+    <rect x="40" y="780" width="180" height="100" rx="8" ry="8" fill="#F1F5F9" stroke="#E2E8F0" stroke-width="1"/>
+    <text x="130" y="812" font-size="13" font-weight="700" fill="#1E293B" text-anchor="middle">7 个专项支线</text>
+    <text x="130" y="832" font-size="10" fill="#64748B" text-anchor="middle">跨 L1-L6 横切场景</text>
+    <text x="130" y="852" font-size="10" fill="#94A3B8" text-anchor="middle">触发条件：场景命中</text>
+
+    <!-- 加密磁盘 → L2 -->
+    <g>
+      <rect x="240" y="800" width="170" height="60" rx="6" ry="6" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.2"/>
+      <text x="325" y="822" font-size="12" font-weight="700" fill="#9F1239" text-anchor="middle">① 加密磁盘</text>
+      <text x="325" y="840" font-size="10" fill="#64748B" text-anchor="middle">BitLocker / FileVault</text>
+      <text x="325" y="854" font-size="10" fill="#64748B" text-anchor="middle">Passware · hashcat</text>
+    </g>
+
+    <!-- VM 虚拟化 → L1 + L2 -->
+    <g>
+      <rect x="420" y="800" width="170" height="60" rx="6" ry="6" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.2"/>
+      <text x="505" y="822" font-size="12" font-weight="700" fill="#1E40AF" text-anchor="middle">② 虚拟化 / VM</text>
+      <text x="505" y="840" font-size="10" fill="#64748B" text-anchor="middle">VMDK / VHDX / vmem</text>
+      <text x="505" y="854" font-size="10" fill="#64748B" text-anchor="middle">libvmdk · vmware-vdiskmanager</text>
+    </g>
+
+    <!-- 浏览器 + 云盘 → L2 + L4 -->
+    <g>
+      <rect x="600" y="800" width="170" height="60" rx="6" ry="6" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="1.2"/>
+      <text x="685" y="822" font-size="12" font-weight="700" fill="#5B21B6" text-anchor="middle">③ 浏览器 + 云盘</text>
+      <text x="685" y="840" font-size="10" fill="#64748B" text-anchor="middle">Chrome · Firefox · OneDrive</text>
+      <text x="685" y="854" font-size="10" fill="#64748B" text-anchor="middle">Hindsight · DPAPI</text>
+    </g>
+
+    <!-- 邮件 → L2 + L6 -->
+    <g>
+      <rect x="780" y="800" width="170" height="60" rx="6" ry="6" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.2"/>
+      <text x="865" y="822" font-size="12" font-weight="700" fill="#92400E" text-anchor="middle">④ 邮件</text>
+      <text x="865" y="840" font-size="10" fill="#64748B" text-anchor="middle">PST / OST / M365 UAL</text>
+      <text x="865" y="854" font-size="10" fill="#64748B" text-anchor="middle">libpff · eDiscovery</text>
+    </g>
+
+    <!-- 聊天 PC 端 → L1 + L2 -->
+    <g>
+      <rect x="960" y="800" width="170" height="60" rx="6" ry="6" fill="#ECFDF5" stroke="#6EE7B7" stroke-width="1.2"/>
+      <text x="1045" y="822" font-size="12" font-weight="700" fill="#065F46" text-anchor="middle">⑤ 聊天 PC 端</text>
+      <text x="1045" y="840" font-size="10" fill="#64748B" text-anchor="middle">WeChat 4.0 · Telegram · 钉钉</text>
+      <text x="1045" y="854" font-size="10" fill="#64748B" text-anchor="middle">内存抓 key + SQLCipher</text>
+    </g>
+
+    <!-- macOS → 跨所有层 -->
+    <g>
+      <rect x="1140" y="800" width="170" height="60" rx="6" ry="6" fill="#ECFEFF" stroke="#67E8F9" stroke-width="1.2"/>
+      <text x="1225" y="822" font-size="12" font-weight="700" fill="#155E75" text-anchor="middle">⑥ macOS 深度</text>
+      <text x="1225" y="840" font-size="10" fill="#64748B" text-anchor="middle">APFS Snap · FSEvents · UL</text>
+      <text x="1225" y="854" font-size="10" fill="#64748B" text-anchor="middle">mac_apt · UnifiedLogReader</text>
+    </g>
+
+    <!-- Linux → 跨所有层 -->
+    <g>
+      <rect x="1320" y="800" width="220" height="60" rx="6" ry="6" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.2"/>
+      <text x="1430" y="822" font-size="12" font-weight="700" fill="#9A3412" text-anchor="middle">⑦ Linux 服务器深度</text>
+      <text x="1430" y="840" font-size="10" fill="#64748B" text-anchor="middle">systemd-journald · auditd · btrfs snap</text>
+      <text x="1430" y="854" font-size="10" fill="#64748B" text-anchor="middle">FJTA · ausearch · snapper</text>
+    </g>
+
+    <!-- 虚线连接专项 → 主层（仅画 3 条最关键的，避免视觉混乱） -->
+    <g fill="none" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5 3" opacity="0.55">
+      <!-- 加密磁盘 → L2 -->
+      <path d="M 325 800 Q 325 720 600 620"/>
+      <!-- VM → L1 -->
+      <path d="M 505 800 Q 505 720 460 430"/>
+      <!-- 聊天 → L1 -->
+      <path d="M 1045 800 Q 1045 720 700 430"/>
+      <!-- macOS → L2 -->
+      <path d="M 1225 800 Q 1225 720 1080 430"/>
+      <!-- Linux → L2 -->
+      <path d="M 1430 800 Q 1430 720 1230 430"/>
+      <!-- 邮件 → L6 -->
+      <path d="M 865 800 Q 865 720 1410 430"/>
+      <!-- 浏览器 → L4 -->
+      <path d="M 685 800 Q 685 720 1090 220"/>
+    </g>
+  </g>
+
+  <!-- ============ 图例 ============ -->
+  <g transform="translate(240, 752)">
+    <text x="0" y="0" font-size="11" font-weight="600" fill="#1E293B">数据流图例</text>
+    <line x1="90" y1="-4" x2="125" y2="-4" stroke="#3B82F6" stroke-width="2" marker-end="url(#arrow-blue)"/>
+    <text x="132" y="0" font-size="10" fill="#64748B">入口采集</text>
+    <line x1="200" y1="-4" x2="235" y2="-4" stroke="#F59E0B" stroke-width="2" marker-end="url(#arrow-amber)"/>
+    <text x="242" y="0" font-size="10" fill="#64748B">汇入时间线</text>
+    <line x1="320" y1="-4" x2="355" y2="-4" stroke="#0F172A" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="362" y="0" font-size="10" fill="#64748B">产出报告</text>
+    <line x1="440" y1="-4" x2="475" y2="-4" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5 3"/>
+    <text x="482" y="0" font-size="10" fill="#64748B">专项支线 / 横切纪律</text>
+  </g>
+</svg></div>
+      <figcaption style="margin-top:8px;color:var(--text-secondary);font-size:0.9em;text-align:center;">
+        图 1 — 6 层取证技术栈架构 + 7 专项支线。
+        L5 横切纪律（左纵列红色）贯穿全栈；L6 容器云原生（右纵列）作为新兴分支；
+        7 专项底部横条通过虚线辐射连到对应主层。
+        数据流 3 色编码：蓝（入口采集）→ 橙（汇入时间线）→ 深色（产出报告）。
+        <a href="figures/INDEX.md" style="color:var(--accent);">设计说明 (INDEX.md)</a>
+      </figcaption>
+    </figure>
+
     <h3>6 层架构</h3>
     <details>
       <summary><strong>L1 内存取证</strong> — 抓"磁盘上看不到的状态"：进程、网络连接、内存马、FVEK/VMK</summary>
@@ -1089,6 +1887,284 @@ tbody tr:hover { background: var(--bg-3); }
   <!-- ========== Career Roadmap ========== -->
   <section id="career-roadmap" class="h2-anchor">
     <h2>跨报告整合 — 个人能力路线图 <a href="#career-roadmap" class="anchor">¶</a></h2>
+    <figure style="margin:24px 0;">
+      <div style="width:100%;max-width:1600px;background:#fff;border-radius:8px;overflow:auto;" role="img" aria-label="个人能力 Year 1-6+ 升级路线 timeline（SANS 课程 + 国内资质 + deliverable）">
+        <svg style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" font-family="'PingFang SC', 'Inter', -apple-system, 'Segoe UI', sans-serif">
+  <!-- ============ defs ============ -->
+  <defs>
+    <linearGradient id="seniority" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ECFDF5"/>
+      <stop offset="33%" stop-color="#6EE7B7"/>
+      <stop offset="66%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#065F46"/>
+    </linearGradient>
+    <marker id="arrow-emerald" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="9" markerHeight="8" orient="auto">
+      <path d="M0,0 L12,5 L0,10 z" fill="#10B981"/>
+    </marker>
+  </defs>
+
+  <!-- ============ canvas bg ============ -->
+  <rect width="1600" height="700" fill="#F8FAFC"/>
+
+  <!-- ============ title block ============ -->
+  <text x="40" y="42" font-size="22" font-weight="700" fill="#0F172A">个人能力升级路线 — Year 1 → Year 6+ × SANS 课程 × 国内资质 × 门槛事件</text>
+  <text x="40" y="66" font-size="13" fill="#64748B">DFIR 工程师从 IR Responder（DEFR）→ 取证专家（DES）→ 体系架构师 → CISO；色深递增 = seniority 增长</text>
+
+  <!-- ============ seniority gradient backbone (底部) ============ -->
+  <rect x="80" y="568" width="1480" height="16" rx="8" ry="8" fill="url(#seniority)" stroke="#94A3B8" stroke-width="0.5"/>
+  <text x="80" y="606" font-size="11" font-weight="700" fill="#64748B">DEFR · 入门</text>
+  <text x="450" y="606" font-size="11" font-weight="700" fill="#64748B">DES · 取证专家</text>
+  <text x="850" y="606" font-size="11" font-weight="700" fill="#64748B">Platform / Architect</text>
+  <text x="1280" y="606" font-size="11" font-weight="700" fill="#64748B">CISO / 总监 / 行业 KOL</text>
+
+  <!-- ============ time markers (顶部) ============ -->
+  <g font-size="11" fill="#64748B" text-anchor="middle">
+    <line x1="80" y1="100" x2="80" y2="558" stroke="#E2E8F0" stroke-width="0.8" stroke-dasharray="3 3"/>
+    <line x1="450" y1="100" x2="450" y2="558" stroke="#E2E8F0" stroke-width="0.8" stroke-dasharray="3 3"/>
+    <line x1="850" y1="100" x2="850" y2="558" stroke="#E2E8F0" stroke-width="0.8" stroke-dasharray="3 3"/>
+    <line x1="1250" y1="100" x2="1250" y2="558" stroke="#E2E8F0" stroke-width="0.8" stroke-dasharray="3 3"/>
+    <line x1="1560" y1="100" x2="1560" y2="558" stroke="#E2E8F0" stroke-width="0.8" stroke-dasharray="3 3"/>
+  </g>
+
+  <!-- ============ Milestone 1: Year 1 IR Responder ============ -->
+  <g>
+    <!-- 卡片 -->
+    <rect x="90" y="160" width="360" height="380" rx="8" ry="8" fill="#FFFFFF" stroke="#A7F3D0" stroke-width="1.5"/>
+    <rect x="90" y="160" width="360" height="42" rx="8" ry="8" fill="#ECFDF5"/>
+    <rect x="90" y="186" width="360" height="16" fill="#ECFDF5"/>
+    <text x="110" y="183" font-size="14" font-weight="700" fill="#065F46">Year 1 · IR Responder</text>
+    <text x="110" y="197" font-size="10" fill="#10B981">对应 ISO 27037 DEFR 角色</text>
+
+    <!-- 国内资质（上方）-->
+    <g transform="translate(108, 220)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#9F1239">国内资质</text>
+      <g transform="translate(0, 12)">
+        <rect x="0" y="0" width="120" height="22" rx="11" ry="11" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1"/>
+        <text x="60" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">CISP-F（推荐）</text>
+        <rect x="128" y="0" width="80" height="22" rx="11" ry="11" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1"/>
+        <text x="168" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">CISP</text>
+      </g>
+    </g>
+
+    <!-- 关键能力 -->
+    <g transform="translate(108, 270)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#1E40AF">关键能力</text>
+      <text x="0" y="18" font-size="10" fill="#1E293B">• osquery / Velociraptor fleet 查询</text>
+      <text x="0" y="34" font-size="10" fill="#1E293B">• NIST 四阶段 + PICERL 六步写 ticket</text>
+      <text x="0" y="50" font-size="10" fill="#1E293B">• Linux / Windows / k8s 基础 artifact</text>
+      <text x="0" y="66" font-size="10" fill="#1E293B">• Alexiou 4 问框架记录初步取证</text>
+      <text x="0" y="82" font-size="10" fill="#1E293B">• ≥ 1 Detection 规则上线</text>
+      <text x="0" y="98" font-size="10" fill="#1E293B">• ≥ 1 P1/P0 事件主理（含 deliverable）</text>
+    </g>
+
+    <!-- SANS 课程（pills 在下方） -->
+    <g transform="translate(108, 410)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#92400E">SANS 课程</text>
+      <g transform="translate(0, 12)">
+        <rect x="0" y="0" width="80" height="24" rx="12" ry="12" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.2"/>
+        <text x="40" y="16" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">FOR498</text>
+        <rect x="88" y="0" width="80" height="24" rx="12" ry="12" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.2"/>
+        <text x="128" y="16" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">FOR500</text>
+      </g>
+      <text x="0" y="50" font-size="10" fill="#64748B">FOR498：Triage 入门 · FOR500：Win artifact → GCFE</text>
+    </g>
+
+    <!-- 门槛事件 -->
+    <g transform="translate(108, 490)">
+      <rect x="0" y="0" width="324" height="34" rx="4" ry="4" fill="#9F1239"/>
+      <text x="12" y="14" font-size="10" font-weight="700" fill="#FFE4E6">⚑ 门槛事件 → Year 2</text>
+      <text x="12" y="28" font-size="10" fill="#FECDD3">独立主导 1 次 P0 事件 + 完整取证报告</text>
+    </g>
+  </g>
+
+  <!-- ============ Milestone 2: Year 2-3 取证专家 ============ -->
+  <g>
+    <rect x="490" y="150" width="360" height="390" rx="8" ry="8" fill="#FFFFFF" stroke="#6EE7B7" stroke-width="1.5"/>
+    <rect x="490" y="150" width="360" height="42" rx="8" ry="8" fill="#D1FAE5"/>
+    <rect x="490" y="176" width="360" height="16" fill="#D1FAE5"/>
+    <text x="510" y="173" font-size="14" font-weight="700" fill="#065F46">Year 2-3 · 取证专家 / Detection Engineer</text>
+    <text x="510" y="187" font-size="10" fill="#059669">对应 ISO 27037 DES 角色</text>
+
+    <!-- 国内资质 -->
+    <g transform="translate(508, 210)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#9F1239">国内资质</text>
+      <g transform="translate(0, 12)">
+        <rect x="0" y="0" width="160" height="22" rx="11" ry="11" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1"/>
+        <text x="80" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">电子数据取证分析师</text>
+        <rect x="168" y="0" width="80" height="22" rx="11" ry="11" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1"/>
+        <text x="208" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">GCFE</text>
+        <rect x="256" y="0" width="80" height="22" rx="11" ry="11" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1"/>
+        <text x="296" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">GCFA</text>
+      </g>
+    </g>
+
+    <!-- 关键能力 -->
+    <g transform="translate(508, 260)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#1E40AF">关键能力</text>
+      <text x="0" y="18" font-size="10" fill="#1E293B">• Sigma / KQL / SPL 规则 + unit test</text>
+      <text x="0" y="34" font-size="10" fill="#1E293B">• ATT&amp;CK / D3FEND 双向映射 coverage</text>
+      <text x="0" y="50" font-size="10" fill="#1E293B">• 主导内存取证 / 磁盘 image 复杂 case</text>
+      <text x="0" y="66" font-size="10" fill="#1E293B">• 横向移动 / 长期 APT / 内部威胁</text>
+      <text x="0" y="82" font-size="10" fill="#1E293B">• 主导 ≥ 1 次 tabletop 演练 + 复盘</text>
+      <text x="0" y="98" font-size="10" fill="#1E293B">• Mandiant Lifecycle 7 段格式报告</text>
+      <text x="0" y="114" font-size="10" fill="#1E293B">• 写 Tool Validation Memo（ISO 27041）</text>
+    </g>
+
+    <!-- SANS 课程 -->
+    <g transform="translate(508, 410)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#92400E">SANS 课程</text>
+      <g transform="translate(0, 12)">
+        <rect x="0" y="0" width="84" height="24" rx="12" ry="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.2"/>
+        <text x="42" y="16" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">FOR508 ⭐</text>
+        <rect x="92" y="0" width="80" height="24" rx="12" ry="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.2"/>
+        <text x="132" y="16" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">FOR526</text>
+        <rect x="180" y="0" width="80" height="24" rx="12" ry="12" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.2"/>
+        <text x="220" y="16" font-size="10" font-weight="700" fill="#92400E" text-anchor="middle">FOR518</text>
+      </g>
+      <text x="0" y="50" font-size="10" fill="#64748B">FOR508：核心 IR + GCFA · FOR526：内存深度 · FOR518：Mac</text>
+    </g>
+
+    <!-- 门槛 -->
+    <g transform="translate(508, 490)">
+      <rect x="0" y="0" width="324" height="34" rx="4" ry="4" fill="#9F1239"/>
+      <text x="12" y="14" font-size="10" font-weight="700" fill="#FFE4E6">⚑ 门槛事件 → Year 4</text>
+      <text x="12" y="28" font-size="10" fill="#FECDD3">跨业务平台铺开 + 主导内部威胁调查</text>
+    </g>
+  </g>
+
+  <!-- ============ Milestone 3: Year 4-6 体系架构师 ============ -->
+  <g>
+    <rect x="890" y="140" width="360" height="400" rx="8" ry="8" fill="#FFFFFF" stroke="#10B981" stroke-width="1.5"/>
+    <rect x="890" y="140" width="360" height="42" rx="8" ry="8" fill="#A7F3D0"/>
+    <rect x="890" y="166" width="360" height="16" fill="#A7F3D0"/>
+    <text x="910" y="163" font-size="14" font-weight="700" fill="#064E3B">Year 4-6 · 体系架构师 / Platform Engineer</text>
+    <text x="910" y="177" font-size="10" fill="#047857">建数据湖 + 选型评估 + 跨组织协同</text>
+
+    <!-- 国内资质 -->
+    <g transform="translate(908, 200)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#9F1239">国内资质</text>
+      <g transform="translate(0, 12)">
+        <rect x="0" y="0" width="120" height="22" rx="11" ry="11" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1"/>
+        <text x="60" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">司法鉴定人（可选）</text>
+        <rect x="128" y="0" width="80" height="22" rx="11" ry="11" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1"/>
+        <text x="168" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">CISSP</text>
+        <rect x="216" y="0" width="100" height="22" rx="11" ry="11" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1"/>
+        <text x="266" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">CCSP / CCSK</text>
+      </g>
+    </g>
+
+    <!-- 关键能力 -->
+    <g transform="translate(908, 250)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#1E40AF">关键能力</text>
+      <text x="0" y="18" font-size="10" fill="#1E293B">• 取证数据湖 schema 设计 + cost opt</text>
+      <text x="0" y="34" font-size="10" fill="#1E293B">• Velociraptor / 商业 DFIR 选型 RFP</text>
+      <text x="0" y="50" font-size="10" fill="#1E293B">• 与法务 / HR / 合规联合 SOP 设计</text>
+      <text x="0" y="66" font-size="10" fill="#1E293B">• PIPL/DSL 合规边界与等保平衡</text>
+      <text x="0" y="82" font-size="10" fill="#1E293B">• CISO 层面 ROI / metric trade-off</text>
+      <text x="0" y="98" font-size="10" fill="#1E293B">• 主导年度内部 DBIR 写作</text>
+      <text x="0" y="114" font-size="10" fill="#1E293B">• 必读：ISO 27043 + Google BSRS Ch.17</text>
+    </g>
+
+    <!-- SANS 课程 -->
+    <g transform="translate(908, 410)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#92400E">SANS 课程</text>
+      <g transform="translate(0, 12)">
+        <rect x="0" y="0" width="84" height="24" rx="12" ry="12" fill="#FDE68A" stroke="#D97706" stroke-width="1.2"/>
+        <text x="42" y="16" font-size="10" font-weight="700" fill="#78350F" text-anchor="middle">FOR509 ⭐</text>
+        <rect x="92" y="0" width="80" height="24" rx="12" ry="12" fill="#FDE68A" stroke="#D97706" stroke-width="1.2"/>
+        <text x="132" y="16" font-size="10" font-weight="700" fill="#78350F" text-anchor="middle">FOR577</text>
+        <rect x="180" y="0" width="100" height="24" rx="12" ry="12" fill="#FDE68A" stroke="#D97706" stroke-width="1.2"/>
+        <text x="230" y="16" font-size="10" font-weight="700" fill="#78350F" text-anchor="middle">SEC504 / 510</text>
+      </g>
+      <text x="0" y="50" font-size="10" fill="#64748B">FOR509：云原生取证 · FOR577：Linux IR · SEC：体系视野</text>
+    </g>
+
+    <!-- 门槛 -->
+    <g transform="translate(908, 490)">
+      <rect x="0" y="0" width="324" height="34" rx="4" ry="4" fill="#9F1239"/>
+      <text x="12" y="14" font-size="10" font-weight="700" fill="#FFE4E6">⚑ 门槛事件 → Year 6+</text>
+      <text x="12" y="28" font-size="10" fill="#FECDD3">对外有影响力 · OSS contrib / talk / blog</text>
+    </g>
+  </g>
+
+  <!-- ============ Milestone 4: Year 6+ CISO ============ -->
+  <g>
+    <rect x="1290" y="130" width="280" height="410" rx="8" ry="8" fill="#10B981" stroke="#064E3B" stroke-width="2"/>
+    <rect x="1290" y="130" width="280" height="42" rx="8" ry="8" fill="#065F46"/>
+    <rect x="1290" y="156" width="280" height="16" fill="#065F46"/>
+    <text x="1310" y="153" font-size="14" font-weight="700" fill="#FFFFFF">Year 6+ · CISO / 安全总监</text>
+    <text x="1310" y="167" font-size="10" fill="#A7F3D0">行业意见领袖 / 跨组织战略</text>
+
+    <!-- 资质（已无需) -->
+    <g transform="translate(1308, 190)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#FFE4E6">国内 / 国际资质</text>
+      <g transform="translate(0, 12)">
+        <rect x="0" y="0" width="100" height="22" rx="11" ry="11" fill="#FECDD3" stroke="#F87171" stroke-width="1"/>
+        <text x="50" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">CISSP / CISM</text>
+        <rect x="108" y="0" width="100" height="22" rx="11" ry="11" fill="#FECDD3" stroke="#F87171" stroke-width="1"/>
+        <text x="158" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">CCISO</text>
+      </g>
+    </g>
+
+    <!-- 关键能力 -->
+    <g transform="translate(1308, 240)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#FFFFFF">关键能力</text>
+      <text x="0" y="18" font-size="10" fill="#D1FAE5">• 跨组织安全战略制定</text>
+      <text x="0" y="34" font-size="10" fill="#D1FAE5">• 与监管对话 + 董事会简报</text>
+      <text x="0" y="50" font-size="10" fill="#D1FAE5">• 培养下一代取证团队</text>
+      <text x="0" y="66" font-size="10" fill="#D1FAE5">• 行业生态 thought leadership</text>
+      <text x="0" y="82" font-size="10" fill="#D1FAE5">• 预算 / 团队规模 / 厂商谈判</text>
+    </g>
+
+    <!-- 输出 -->
+    <g transform="translate(1308, 340)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#FFFFFF">代表作（自我品牌）</text>
+      <text x="0" y="18" font-size="10" fill="#D1FAE5">• 年度对外 talk / 行业会议</text>
+      <text x="0" y="34" font-size="10" fill="#D1FAE5">• 内部 M-Trends → 行业贡献</text>
+      <text x="0" y="50" font-size="10" fill="#D1FAE5">• OSS / blog / 著书</text>
+      <text x="0" y="66" font-size="10" fill="#D1FAE5">• 担任 Mandiant / NCC 同行 peer</text>
+    </g>
+
+    <!-- 最高 milestone -->
+    <g transform="translate(1308, 490)">
+      <rect x="0" y="0" width="244" height="34" rx="4" ry="4" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.2"/>
+      <text x="12" y="14" font-size="10" font-weight="700" fill="#92400E">🏆 国内大型互联网公司</text>
+      <text x="12" y="28" font-size="10" fill="#78350F">P9-P10 / 3-2 至 4-1 / T13+ 区间</text>
+    </g>
+  </g>
+
+  <!-- ============ 阶段间衔接箭头（年份连接） ============ -->
+  <g fill="none" stroke="#10B981" stroke-width="2" opacity="0.5">
+    <line x1="452" y1="340" x2="488" y2="340" marker-end="url(#arrow-emerald)"/>
+    <line x1="852" y1="340" x2="888" y2="340" marker-end="url(#arrow-emerald)"/>
+    <line x1="1252" y1="340" x2="1288" y2="340" marker-end="url(#arrow-emerald)"/>
+  </g>
+
+  <!-- ============ 图例（顶部右） ============ -->
+  <g transform="translate(900, 90)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#1E293B">图例</text>
+    <rect x="50" y="-10" width="20" height="16" rx="3" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1.2"/>
+    <text x="76" y="3" font-size="10" fill="#64748B">SANS 课程</text>
+    <rect x="160" y="-10" width="20" height="16" rx="3" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.2"/>
+    <text x="186" y="3" font-size="10" fill="#64748B">国内 / 国际资质</text>
+    <rect x="290" y="-10" width="20" height="16" rx="3" fill="#9F1239"/>
+    <text x="316" y="3" font-size="10" fill="#64748B">门槛事件（升级条件）</text>
+    <text x="476" y="3" font-size="10" fill="#10B981" font-weight="700">⭐</text>
+    <text x="490" y="3" font-size="10" fill="#64748B">该年级最重要的 1 门</text>
+  </g>
+
+  <!-- ============ 关键判断 footnote ============ -->
+  <g>
+    <rect x="40" y="630" width="1520" height="56" rx="6" ry="6" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1"/>
+    <text x="60" y="652" font-size="11" font-weight="700" fill="#1E40AF">关键判断（来自 04 / 05 报告）</text>
+    <text x="60" y="670" font-size="10" fill="#1E40AF">⓵ SANS 培训材料价值 ≈ 70%，证书 ≈ 30% —— <tspan font-weight="700">不需要全考证</tspan>，材料读透即可  ⓶ FOR498 → FOR500 (GCFE) → FOR508 (GCFA) 三阶段一年内打通是黄金路径</text>
+    <text x="60" y="684" font-size="10" fill="#1E40AF">⓷ <tspan font-weight="700">国内互联网公司一般不需司法鉴定人资质</tspan>（严格司法移交场景才需）  ⓸ CISP-F 在国内司法 / 公检法 / 大型甲方常见，是国内必备  ⓹ Year 4+ 真正稀缺的是&quot;对外有影响力&quot;能力</text>
+  </g>
+</svg>
+      </div>
+      <figcaption style="margin-top:8px;color:var(--text-secondary);font-size:0.9em;text-align:center;">图 4 — 个人能力 Y1-Y6+ 升级路线。每段含国内资质 pill（玫红，CISP-F / 取证分析师 / 司法鉴定人）+ SANS 课程 pill（琥珀，FOR498/500/508/509/518/526）+ 门槛事件。底部 seniority 渐变 = DEFR → DES → Architect → KOL。 <a href="figures/INDEX.md" style="color:var(--accent);">设计说明 (INDEX.md)</a></figcaption>
+    </figure>
+
     <p class="sub-title">合并 Report 04 §17 + Report 05 个人成长路径，按年度阶段配套 SANS 课程 + 国内资质 + deliverable。</p>
 
     <div class="timeline">
@@ -1142,6 +2218,347 @@ tbody tr:hover { background: var(--bg-3); }
   <!-- ========== Lab Roadmap ========== -->
   <section id="lab-roadmap" class="h2-anchor">
     <h2>跨报告整合 — 建实验室路线图 (4 阶段) <a href="#lab-roadmap" class="anchor">¶</a></h2>
+    <figure style="margin:24px 0;">
+      <div style="width:100%;max-width:1600px;background:#fff;border-radius:8px;overflow:auto;" role="img" aria-label="4 阶段企业建取证实验室路线图 + 硬件 3 档预算映射">
+        <svg style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" font-family="'PingFang SC', 'Inter', -apple-system, 'Segoe UI', sans-serif">
+  <!-- ============ defs ============ -->
+  <defs>
+    <linearGradient id="grad-l0" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#BFDBFE"/>
+    </linearGradient>
+    <linearGradient id="grad-l1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#DBEAFE"/>
+      <stop offset="100%" stop-color="#93C5FD"/>
+    </linearGradient>
+    <linearGradient id="grad-l2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#93C5FD"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="grad-l3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1E40AF"/>
+    </linearGradient>
+    <marker id="arrow-amber-r" viewBox="0 0 12 10" refX="11" refY="5" markerWidth="9" markerHeight="8" orient="auto">
+      <path d="M0,0 L12,5 L0,10 z" fill="#F59E0B"/>
+    </marker>
+    <marker id="arrow-amber-l" viewBox="0 0 12 10" refX="1" refY="5" markerWidth="9" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L12,5 L0,10 z" fill="#F59E0B"/>
+    </marker>
+  </defs>
+
+  <!-- ============ canvas bg ============ -->
+  <rect width="1600" height="800" fill="#F8FAFC"/>
+
+  <!-- ============ title block ============ -->
+  <text x="40" y="42" font-size="22" font-weight="700" fill="#0F172A">企业取证实验室建设 4 阶段路线图 — 时间 × 团队 × 预算 × 工具链</text>
+  <text x="40" y="66" font-size="13" fill="#64748B">CMMI 5 级模型 → DFIR 改造：Reactive → Reproducible → Proactive → Adaptive；橙色箭头 = 硬件 3 档预算映射阶段</text>
+
+  <!-- ============ timeline backbone ============ -->
+  <g>
+    <!-- 轨道 -->
+    <line x1="80" y1="540" x2="1560" y2="540" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6 4"/>
+    <!-- 时间刻度 -->
+    <g font-size="11" fill="#64748B" text-anchor="middle">
+      <line x1="80" y1="530" x2="80" y2="550" stroke="#94A3B8" stroke-width="1.5"/>
+      <text x="80" y="568" font-weight="600">M 0</text>
+      <line x1="450" y1="530" x2="450" y2="550" stroke="#94A3B8" stroke-width="1.5"/>
+      <text x="450" y="568" font-weight="600">M 6</text>
+      <line x1="820" y1="530" x2="820" y2="550" stroke="#94A3B8" stroke-width="1.5"/>
+      <text x="820" y="568" font-weight="600">M 18</text>
+      <line x1="1190" y1="530" x2="1190" y2="550" stroke="#94A3B8" stroke-width="1.5"/>
+      <text x="1190" y="568" font-weight="600">M 36</text>
+      <line x1="1560" y1="530" x2="1560" y2="550" stroke="#94A3B8" stroke-width="1.5"/>
+      <text x="1560" y="568" font-weight="600">M 36+</text>
+    </g>
+    <text x="820" y="592" font-size="11" font-weight="700" fill="#64748B" text-anchor="middle">时间投入（月）— 累计 36+ 月走完 Level 0 → Level 3</text>
+  </g>
+
+  <!-- ============ Phase 1: Level 0 → Level 1 (M0-M6) ============ -->
+  <g>
+    <!-- 进度条 -->
+    <rect x="80" y="490" width="370" height="36" rx="8" ry="8" fill="url(#grad-l0)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="265" y="513" font-size="13" font-weight="700" fill="#1E40AF" text-anchor="middle">Level 0 → 1 · Reactive → Reproducible</text>
+
+    <!-- 阶段卡 -->
+    <rect x="80" y="110" width="370" height="360" rx="8" ry="8" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="1.5"/>
+    <rect x="80" y="110" width="370" height="38" rx="8" ry="8" fill="#1E40AF"/>
+    <rect x="80" y="134" width="370" height="14" fill="#1E40AF"/>
+    <text x="96" y="135" font-size="13" font-weight="700" fill="#FFFFFF">阶段 1 · 救火型 → 流程化</text>
+
+    <!-- 关键指标行 -->
+    <g transform="translate(98, 168)">
+      <text x="0" y="0" font-size="10" font-weight="700" fill="#64748B">⏱ 时间</text>
+      <text x="100" y="0" font-size="11" font-weight="700" fill="#1E293B">3-6 月</text>
+      <text x="0" y="20" font-size="10" font-weight="700" fill="#64748B">👥 团队</text>
+      <text x="100" y="20" font-size="11" font-weight="700" fill="#1E293B">2-3 FTE</text>
+      <text x="0" y="40" font-size="10" font-weight="700" fill="#64748B">💰 预算</text>
+      <text x="100" y="40" font-size="11" font-weight="700" fill="#1E293B">~$200/月运营</text>
+    </g>
+
+    <!-- 关键能力 pills -->
+    <g transform="translate(96, 232)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#1E40AF">关键工具链</text>
+      <g transform="translate(0, 10)">
+        <rect x="0" y="0" width="120" height="22" rx="11" ry="11" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+        <text x="60" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">osquery + FleetDM</text>
+        <rect x="128" y="0" width="100" height="22" rx="11" ry="11" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+        <text x="178" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">FTK Imager</text>
+        <rect x="236" y="0" width="100" height="22" rx="11" ry="11" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+        <text x="286" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">OpenSearch</text>
+      </g>
+      <g transform="translate(0, 36)">
+        <rect x="0" y="0" width="100" height="22" rx="11" ry="11" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+        <text x="50" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">PagerDuty</text>
+        <rect x="108" y="0" width="100" height="22" rx="11" ry="11" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+        <text x="158" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">IR Runbook</text>
+        <rect x="216" y="0" width="120" height="22" rx="11" ry="11" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+        <text x="276" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">Audit DB（独立）</text>
+      </g>
+    </g>
+
+    <!-- 毕业 checklist -->
+    <g transform="translate(96, 318)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#10B981">毕业 checklist</text>
+      <text x="0" y="20" font-size="10" fill="#1E293B">☑ 5 个最近事件 4 个按 NIST 四阶段</text>
+      <text x="0" y="36" font-size="10" fill="#1E293B">☑ 5 分钟内 osquery 全 fleet 定位二进制</text>
+      <text x="0" y="52" font-size="10" fill="#1E293B">☑ PII 访问 100% Audit Trail</text>
+      <text x="0" y="68" font-size="10" fill="#1E293B">☑ 等保 2.0 三级审计 / 入侵防范过</text>
+      <text x="0" y="84" font-size="10" fill="#1E293B">☑ P0/P1 报告按 Mandiant Lifecycle 7 段</text>
+      <text x="0" y="105" font-size="10" font-weight="700" fill="#9F1239">门槛事件：独立主导 1 次 P0</text>
+    </g>
+  </g>
+
+  <!-- ============ Phase 2: Level 1 → Level 2 (M6-M18) ============ -->
+  <g>
+    <rect x="450" y="490" width="370" height="36" rx="8" ry="8" fill="url(#grad-l1)" stroke="#3B82F6" stroke-width="1.5"/>
+    <text x="635" y="513" font-size="13" font-weight="700" fill="#1E40AF" text-anchor="middle">Level 1 → 2 · Reproducible → Proactive</text>
+
+    <rect x="450" y="110" width="370" height="360" rx="8" ry="8" fill="#FFFFFF" stroke="#93C5FD" stroke-width="1.5"/>
+    <rect x="450" y="110" width="370" height="38" rx="8" ry="8" fill="#1D4ED8"/>
+    <rect x="450" y="134" width="370" height="14" fill="#1D4ED8"/>
+    <text x="466" y="135" font-size="13" font-weight="700" fill="#FFFFFF">阶段 2 · 流程化 → 主动 hunt</text>
+
+    <g transform="translate(468, 168)">
+      <text x="0" y="0" font-size="10" font-weight="700" fill="#64748B">⏱ 时间</text>
+      <text x="100" y="0" font-size="11" font-weight="700" fill="#1E293B">6-12 月（累 18）</text>
+      <text x="0" y="20" font-size="10" font-weight="700" fill="#64748B">👥 团队</text>
+      <text x="100" y="20" font-size="11" font-weight="700" fill="#1E293B">4-6 FTE</text>
+      <text x="0" y="40" font-size="10" font-weight="700" fill="#64748B">💰 预算</text>
+      <text x="100" y="40" font-size="11" font-weight="700" fill="#1E293B">~$1.2k/月运营</text>
+    </g>
+
+    <g transform="translate(466, 232)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#1E40AF">关键工具链</text>
+      <g transform="translate(0, 10)">
+        <rect x="0" y="0" width="100" height="22" rx="11" ry="11" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+        <text x="50" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">Velociraptor</text>
+        <rect x="108" y="0" width="80" height="22" rx="11" ry="11" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+        <text x="148" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">Sigma</text>
+        <rect x="196" y="0" width="80" height="22" rx="11" ry="11" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+        <text x="236" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">TheHive</text>
+        <rect x="284" y="0" width="60" height="22" rx="11" ry="11" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+        <text x="314" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">MISP</text>
+      </g>
+      <g transform="translate(0, 36)">
+        <rect x="0" y="0" width="120" height="22" rx="11" ry="11" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+        <text x="60" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">ATT&amp;CK Navigator</text>
+        <rect x="128" y="0" width="100" height="22" rx="11" ry="11" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+        <text x="178" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">D3FEND</text>
+        <rect x="236" y="0" width="100" height="22" rx="11" ry="11" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+        <text x="286" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">DeTT&amp;CT</text>
+      </g>
+    </g>
+
+    <g transform="translate(466, 318)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#10B981">毕业 checklist</text>
+      <text x="0" y="20" font-size="10" fill="#1E293B">☑ 3 月内 1 次主动 hunt 发现真实问题</text>
+      <text x="0" y="36" font-size="10" fill="#1E293B">☑ 30 min 拿到 mem dump + 磁盘 image</text>
+      <text x="0" y="52" font-size="10" fill="#1E293B">☑ ATT&amp;CK 矩阵覆盖 ≥ 60%</text>
+      <text x="0" y="68" font-size="10" fill="#1E293B">☑ 季度 tabletop 演练 + 复盘闭环</text>
+      <text x="0" y="84" font-size="10" fill="#1E293B">☑ 内部威胁 SOP 独立成卷</text>
+      <text x="0" y="105" font-size="10" font-weight="700" fill="#9F1239">门槛事件：跨业务线平台铺开</text>
+    </g>
+  </g>
+
+  <!-- ============ Phase 3: Level 2 → Level 3 (M18-M36) ============ -->
+  <g>
+    <rect x="820" y="490" width="370" height="36" rx="8" ry="8" fill="url(#grad-l2)" stroke="#1D4ED8" stroke-width="1.5"/>
+    <text x="1005" y="513" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Level 2 → 3 · Proactive → Adaptive</text>
+
+    <rect x="820" y="110" width="370" height="360" rx="8" ry="8" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5"/>
+    <rect x="820" y="110" width="370" height="38" rx="8" ry="8" fill="#1E3A8A"/>
+    <rect x="820" y="134" width="370" height="14" fill="#1E3A8A"/>
+    <text x="836" y="135" font-size="13" font-weight="700" fill="#FFFFFF">阶段 3 · 主动 hunt → 持续优化</text>
+
+    <g transform="translate(838, 168)">
+      <text x="0" y="0" font-size="10" font-weight="700" fill="#64748B">⏱ 时间</text>
+      <text x="100" y="0" font-size="11" font-weight="700" fill="#1E293B">12-18 月（累 36）</text>
+      <text x="0" y="20" font-size="10" font-weight="700" fill="#64748B">👥 团队</text>
+      <text x="100" y="20" font-size="11" font-weight="700" fill="#1E293B">8-12 FTE</text>
+      <text x="0" y="40" font-size="10" font-weight="700" fill="#64748B">💰 预算</text>
+      <text x="100" y="40" font-size="11" font-weight="700" fill="#1E293B">~$5-8k/月</text>
+    </g>
+
+    <g transform="translate(836, 232)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#1E40AF">关键工具链</text>
+      <g transform="translate(0, 10)">
+        <rect x="0" y="0" width="100" height="22" rx="11" ry="11" fill="#BFDBFE" stroke="#3B82F6" stroke-width="1"/>
+        <text x="50" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">ClickHouse</text>
+        <rect x="108" y="0" width="100" height="22" rx="11" ry="11" fill="#BFDBFE" stroke="#3B82F6" stroke-width="1"/>
+        <text x="158" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">Snowflake</text>
+        <rect x="216" y="0" width="120" height="22" rx="11" ry="11" fill="#BFDBFE" stroke="#3B82F6" stroke-width="1"/>
+        <text x="276" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">Sigma CI · GitHub</text>
+      </g>
+      <g transform="translate(0, 36)">
+        <rect x="0" y="0" width="100" height="22" rx="11" ry="11" fill="#BFDBFE" stroke="#3B82F6" stroke-width="1"/>
+        <text x="50" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">Grafana</text>
+        <rect x="108" y="0" width="120" height="22" rx="11" ry="11" fill="#BFDBFE" stroke="#3B82F6" stroke-width="1"/>
+        <text x="168" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">Atomic Red Team</text>
+        <rect x="236" y="0" width="100" height="22" rx="11" ry="11" fill="#BFDBFE" stroke="#3B82F6" stroke-width="1"/>
+        <text x="286" y="14" font-size="10" fill="#1E40AF" text-anchor="middle">SafeBreach</text>
+      </g>
+    </g>
+
+    <g transform="translate(836, 318)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#10B981">毕业 checklist</text>
+      <text x="0" y="20" font-size="10" fill="#1E293B">☑ 规则 git history + CI + test，&lt;1 天上线</text>
+      <text x="0" y="36" font-size="10" fill="#1E293B">☑ MTTD &lt; 30 min（CVE）/ &lt; 4hr（内部）</text>
+      <text x="0" y="52" font-size="10" fill="#1E293B">☑ 一行 SQL 跑数据湖 6 月行为序列</text>
+      <text x="0" y="68" font-size="10" fill="#1E293B">☑ 月度安全度量看板 → CISO</text>
+      <text x="0" y="84" font-size="10" fill="#1E293B">☑ 年度内部 DBIR 出版给安委会</text>
+      <text x="0" y="105" font-size="10" font-weight="700" fill="#9F1239">门槛事件：对外 talk / OSS contrib</text>
+    </g>
+  </g>
+
+  <!-- ============ Phase 4: Level 3+ Adaptive 持续 (M36+) ============ -->
+  <g>
+    <rect x="1190" y="490" width="370" height="36" rx="8" ry="8" fill="url(#grad-l3)" stroke="#1E40AF" stroke-width="1.5"/>
+    <text x="1375" y="513" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">Level 3+ · Adaptive 持续优化</text>
+
+    <rect x="1190" y="110" width="370" height="360" rx="8" ry="8" fill="#FFFFFF" stroke="#3B82F6" stroke-width="1.5"/>
+    <rect x="1190" y="110" width="370" height="38" rx="8" ry="8" fill="#172554"/>
+    <rect x="1190" y="134" width="370" height="14" fill="#172554"/>
+    <text x="1206" y="135" font-size="13" font-weight="700" fill="#FFFFFF">阶段 4 · 持续进化 · 无毕业</text>
+
+    <g transform="translate(1208, 168)">
+      <text x="0" y="0" font-size="10" font-weight="700" fill="#64748B">⏱ 时间</text>
+      <text x="100" y="0" font-size="11" font-weight="700" fill="#1E293B">36+ 月（永续）</text>
+      <text x="0" y="20" font-size="10" font-weight="700" fill="#64748B">👥 团队</text>
+      <text x="100" y="20" font-size="11" font-weight="700" fill="#1E293B">12-30+ FTE</text>
+      <text x="0" y="40" font-size="10" font-weight="700" fill="#64748B">💰 预算</text>
+      <text x="100" y="40" font-size="11" font-weight="700" fill="#1E293B">~$10-30k+/月</text>
+    </g>
+
+    <g transform="translate(1206, 232)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#1E40AF">关键能力专业化</text>
+      <g transform="translate(0, 10)">
+        <rect x="0" y="0" width="80" height="22" rx="11" ry="11" fill="#93C5FD" stroke="#1E40AF" stroke-width="1"/>
+        <text x="40" y="14" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Hunt 专员</text>
+        <rect x="88" y="0" width="100" height="22" rx="11" ry="11" fill="#93C5FD" stroke="#1E40AF" stroke-width="1"/>
+        <text x="138" y="14" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Malware RE</text>
+        <rect x="196" y="0" width="100" height="22" rx="11" ry="11" fill="#93C5FD" stroke="#1E40AF" stroke-width="1"/>
+        <text x="246" y="14" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">Cloud 专员</text>
+        <rect x="304" y="0" width="60" height="22" rx="11" ry="11" fill="#93C5FD" stroke="#1E40AF" stroke-width="1"/>
+        <text x="334" y="14" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">内部</text>
+      </g>
+      <g transform="translate(0, 36)">
+        <rect x="0" y="0" width="120" height="22" rx="11" ry="11" fill="#93C5FD" stroke="#1E40AF" stroke-width="1"/>
+        <text x="60" y="14" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">紫队常态化</text>
+        <rect x="128" y="0" width="120" height="22" rx="11" ry="11" fill="#93C5FD" stroke="#1E40AF" stroke-width="1"/>
+        <text x="188" y="14" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">CISO 董事会简报</text>
+        <rect x="256" y="0" width="80" height="22" rx="11" ry="11" fill="#93C5FD" stroke="#1E40AF" stroke-width="1"/>
+        <text x="296" y="14" font-size="10" fill="#FFFFFF" font-weight="600" text-anchor="middle">M-Trends</text>
+      </g>
+    </g>
+
+    <g transform="translate(1206, 318)">
+      <text x="0" y="0" font-size="11" font-weight="700" fill="#10B981">持续优化指标</text>
+      <text x="0" y="20" font-size="10" fill="#1E293B">↻ 检测规则 / hunt query 持续迭代</text>
+      <text x="0" y="36" font-size="10" fill="#1E293B">↻ IR action item 100% 闭环 &lt; 2 sprint</text>
+      <text x="0" y="52" font-size="10" fill="#1E293B">↻ 人均事件 / 误报率 / 覆盖率 季度优化</text>
+      <text x="0" y="68" font-size="10" fill="#1E293B">↻ 红 / 蓝 / 紫队常态化对抗</text>
+      <text x="0" y="84" font-size="10" fill="#1E293B">↻ 取证报告 → CISO → 董事会标准件</text>
+      <text x="0" y="105" font-size="10" font-weight="700" fill="#9F1239">对标：Mandiant / Microsoft DART</text>
+    </g>
+  </g>
+
+  <!-- ============ 硬件 3 档预算映射（底部横条 + 箭头到对应阶段） ============ -->
+  <g>
+    <!-- 整体容器 -->
+    <rect x="40" y="630" width="1520" height="150" rx="8" ry="8" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.2"/>
+    <rect x="40" y="630" width="1520" height="32" rx="8" ry="8" fill="#92400E"/>
+    <rect x="40" y="652" width="1520" height="10" fill="#92400E"/>
+    <text x="56" y="652" font-size="13" font-weight="700" fill="#FFFFFF">硬件 3 档预算（来自 02 报告）→ 映射到 4 阶段对应位置</text>
+
+    <!-- 档位 1 -->
+    <g>
+      <rect x="60" y="680" width="370" height="88" rx="6" ry="6" fill="#FFFFFF" stroke="#FDBA74" stroke-width="1.2"/>
+      <text x="80" y="702" font-size="12" font-weight="700" fill="#92400E">档位 1 · 入门</text>
+      <text x="80" y="720" font-size="11" font-weight="700" fill="#9A3412">~$6,340 一次性 + $200/月</text>
+      <text x="80" y="738" font-size="10" fill="#64748B">DIY Threadripper + CRU FUDv6 + 软件镜像</text>
+      <text x="80" y="754" font-size="10" fill="#64748B">→ 1 人 + 月 1-3 起</text>
+    </g>
+
+    <!-- 档位 2 -->
+    <g>
+      <rect x="440" y="680" width="370" height="88" rx="6" ry="6" fill="#FFFFFF" stroke="#F59E0B" stroke-width="1.2"/>
+      <text x="460" y="702" font-size="12" font-weight="700" fill="#92400E">档位 2 · 中级 IR 实验室</text>
+      <text x="460" y="720" font-size="11" font-weight="700" fill="#9A3412">~$33,380 + $1,200/月</text>
+      <text x="460" y="738" font-size="10" fill="#64748B">TALINO + FRED-L + Falcon-NEO2 + TC-5500</text>
+      <text x="460" y="754" font-size="10" fill="#64748B">→ 2-4 人 + 月 5-15 起</text>
+    </g>
+
+    <!-- 档位 3 -->
+    <g>
+      <rect x="820" y="680" width="370" height="88" rx="6" ry="6" fill="#FFFFFF" stroke="#D97706" stroke-width="1.2"/>
+      <text x="840" y="702" font-size="12" font-weight="700" fill="#92400E">档位 3 · 完整企业级</text>
+      <text x="840" y="720" font-size="11" font-weight="700" fill="#9A3412">~$140,000 + $5-8k/月</text>
+      <text x="840" y="738" font-size="10" fill="#64748B">TALINO NUIX×2 + Atola TF2 + Insight + 60-bay</text>
+      <text x="840" y="754" font-size="10" fill="#64748B">→ 大型团队 + 月 20+ 起 + 跨地域</text>
+    </g>
+
+    <!-- 档位 4 · 持续投入 -->
+    <g>
+      <rect x="1200" y="680" width="340" height="88" rx="6" ry="6" fill="#FFFFFF" stroke="#B45309" stroke-width="1.2" stroke-dasharray="5 3"/>
+      <text x="1220" y="702" font-size="12" font-weight="700" fill="#92400E">持续投入 · 平台 + 培训</text>
+      <text x="1220" y="720" font-size="11" font-weight="700" fill="#9A3412">软件 license $30k+/年</text>
+      <text x="1220" y="738" font-size="10" fill="#64748B">EnCase + AXIOM + X-Ways + 美亚信创</text>
+      <text x="1220" y="754" font-size="10" fill="#64748B">+ SANS 培训 + 司法鉴定 + 关键 retainer</text>
+    </g>
+
+    <!-- 映射箭头：档位 1 → 阶段 1, 档位 2 → 阶段 2, 档位 3 → 阶段 3, 持续 → 阶段 4 -->
+    <g fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.7">
+      <path d="M 245 680 Q 245 620 265 540" marker-end="url(#arrow-amber-r)"/>
+      <path d="M 625 680 Q 625 620 635 540" marker-end="url(#arrow-amber-r)"/>
+      <path d="M 1005 680 Q 1005 620 1005 540" marker-end="url(#arrow-amber-r)"/>
+      <path d="M 1370 680 Q 1370 620 1375 540" marker-end="url(#arrow-amber-r)"/>
+    </g>
+  </g>
+
+  <!-- ============ 阶段间衔接箭头（在进度条下方） ============ -->
+  <g fill="none" stroke="#CBD5E1" stroke-width="1.5">
+    <path d="M 450 508 Q 460 508 470 508"/>
+    <path d="M 820 508 Q 830 508 840 508"/>
+    <path d="M 1190 508 Q 1200 508 1210 508"/>
+  </g>
+
+  <!-- ============ 图例 ============ -->
+  <g transform="translate(40, 100)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#64748B">色深递增 = 成熟度增长</text>
+    <rect x="180" y="-10" width="40" height="14" fill="url(#grad-l0)"/>
+    <rect x="220" y="-10" width="40" height="14" fill="url(#grad-l1)"/>
+    <rect x="260" y="-10" width="40" height="14" fill="url(#grad-l2)"/>
+    <rect x="300" y="-10" width="40" height="14" fill="url(#grad-l3)"/>
+    <text x="350" y="0" font-size="11" fill="#94A3B8">L0 → L1 → L2 → L3+</text>
+    <line x1="500" y1="-4" x2="535" y2="-4" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <text x="542" y="0" font-size="11" fill="#94A3B8">硬件预算 → 阶段映射</text>
+  </g>
+</svg>
+      </div>
+      <figcaption style="margin-top:8px;color:var(--text-secondary);font-size:0.9em;text-align:center;">图 3 — 建实验室 4 阶段 timeline。每阶段含时间 / 团队 / 预算 / 工具链 / 毕业 checklist / 门槛事件。底部硬件 3 档（$6.3k / $33k / $140k）虚线箭头映射对应阶段。 <a href="figures/INDEX.md" style="color:var(--accent);">设计说明 (INDEX.md)</a></figcaption>
+    </figure>
+
     <p class="sub-title">合并 Report 02 硬件清单 (三档) + Report 05 CMMI 4 阶段（Level 0→3）。</p>
 
     <div class="lab-stage">
@@ -1223,6 +2640,233 @@ tbody tr:hover { background: var(--bg-3); }
   <!-- ========== Top 10 Insights ========== -->
   <section id="insights" class="h2-anchor">
     <h2>关键洞察 Top 10 <a href="#insights" class="anchor">¶</a></h2>
+    <figure style="margin:24px 0;">
+      <div style="width:100%;max-width:1600px;background:#fff;border-radius:8px;overflow:auto;" role="img" aria-label="取证 vs 风控 vs IR 三 function 韦恩图（国内常混淆的安全角色区分）">
+        <svg style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" font-family="'PingFang SC', 'Inter', -apple-system, 'Segoe UI', sans-serif">
+  <!-- ============ defs ============ -->
+  <defs>
+    <radialGradient id="circ-forensics" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F43F5E" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#F43F5E" stop-opacity="0.25"/>
+    </radialGradient>
+    <radialGradient id="circ-risk" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.25"/>
+    </radialGradient>
+    <radialGradient id="circ-ir" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.25"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ============ canvas bg ============ -->
+  <rect width="1400" height="900" fill="#F8FAFC"/>
+
+  <!-- ============ title block ============ -->
+  <text x="40" y="42" font-size="22" font-weight="700" fill="#0F172A">取证 (DFIR) vs 风控 vs IR — 三个 function 的区分（韦恩图）</text>
+  <text x="40" y="66" font-size="13" fill="#64748B">国内大型互联网公司常将三者混淆，导致预算错配 + 招聘错人；中心 = CISO 体系跨 function 协同</text>
+
+  <!-- ============ 3 圆主体（透明度叠加，颜色自然混合） ============ -->
+  <g>
+    <!-- 取证（左上, Rose） -->
+    <circle cx="540" cy="430" r="280" fill="url(#circ-forensics)" stroke="#F43F5E" stroke-width="2.5"/>
+    <!-- 风控（右上, Blue） -->
+    <circle cx="860" cy="430" r="280" fill="url(#circ-risk)" stroke="#3B82F6" stroke-width="2.5"/>
+    <!-- IR（下方, Emerald） -->
+    <circle cx="700" cy="640" r="280" fill="url(#circ-ir)" stroke="#10B981" stroke-width="2.5"/>
+  </g>
+
+  <!-- ============ 圆标题（在圆内顶部，避开交集区域） ============ -->
+  <g>
+    <!-- 取证 标题 -->
+    <text x="400" y="250" font-size="20" font-weight="700" fill="#9F1239" text-anchor="middle">取证 DFIR</text>
+    <text x="400" y="272" font-size="12" font-weight="600" fill="#9F1239" text-anchor="middle">"发生了什么 + 怎么发生 + 如何避免再发"</text>
+    <text x="400" y="290" font-size="11" fill="#9F1239" text-anchor="middle">时间尺度：事后（彻底）</text>
+
+    <!-- 风控 标题 -->
+    <text x="1000" y="250" font-size="20" font-weight="700" fill="#1E40AF" text-anchor="middle">风控 Anti-abuse</text>
+    <text x="1000" y="272" font-size="12" font-weight="600" fill="#1E40AF" text-anchor="middle">"当前用户/行为是不是坏人"</text>
+    <text x="1000" y="290" font-size="11" fill="#1E40AF" text-anchor="middle">时间尺度：实时（毫秒）</text>
+
+    <!-- IR 标题 -->
+    <text x="700" y="850" font-size="20" font-weight="700" fill="#065F46" text-anchor="middle">IR Incident Response</text>
+    <text x="700" y="872" font-size="12" font-weight="600" fill="#065F46" text-anchor="middle">"怎么把损失止住 + 多久能恢复"</text>
+    <text x="700" y="887" font-size="11" fill="#065F46" text-anchor="middle">时间尺度：事中（小时）</text>
+  </g>
+
+  <!-- ============ 独占区域 · 取证（左侧） ============ -->
+  <g transform="translate(330, 360)">
+    <rect x="0" y="0" width="160" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#F43F5E" stroke-width="1.2"/>
+    <text x="80" y="14" font-size="11" font-weight="700" fill="#9F1239" text-anchor="middle">司法可用 chain-of-custody</text>
+    <g transform="translate(0, 28)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#F43F5E" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#9F1239" text-anchor="middle">Volatility · Plaso</text>
+    </g>
+    <g transform="translate(0, 56)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#F43F5E" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#9F1239" text-anchor="middle">磁盘 / 内存镜像</text>
+    </g>
+    <g transform="translate(0, 84)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#F43F5E" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#9F1239" text-anchor="middle">MITRE D3FEND 映射</text>
+    </g>
+    <g transform="translate(0, 112)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#F43F5E" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#9F1239" text-anchor="middle">root cause 报告</text>
+    </g>
+  </g>
+
+  <!-- ============ 独占区域 · 风控（右侧） ============ -->
+  <g transform="translate(950, 360)">
+    <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#3B82F6" stroke-width="1.2"/>
+    <text x="70" y="14" font-size="11" font-weight="700" fill="#1E40AF" text-anchor="middle">用户行为画像</text>
+    <g transform="translate(0, 28)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#3B82F6" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#1E40AF" text-anchor="middle">异常检测 ML</text>
+    </g>
+    <g transform="translate(0, 56)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#3B82F6" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#1E40AF" text-anchor="middle">业务规则引擎</text>
+    </g>
+    <g transform="translate(0, 84)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#3B82F6" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#1E40AF" text-anchor="middle">设备指纹 + IP 库</text>
+    </g>
+    <g transform="translate(0, 112)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#3B82F6" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#1E40AF" text-anchor="middle">拦截 / 放行决策</text>
+    </g>
+  </g>
+
+  <!-- ============ 独占区域 · IR（下方） ============ -->
+  <g transform="translate(630, 770)">
+    <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+    <text x="70" y="14" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">实时阻断 · MTTR</text>
+    <g transform="translate(-160, -28)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">SOC 值班 / on-call</text>
+    </g>
+    <g transform="translate(160, -28)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">通告 / 公关协调</text>
+    </g>
+    <g transform="translate(-160, 0)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">PICERL 六步法</text>
+    </g>
+    <g transform="translate(160, 0)">
+      <rect x="0" y="0" width="140" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+      <text x="70" y="14" font-size="11" font-weight="700" fill="#065F46" text-anchor="middle">告警分流 triage</text>
+    </g>
+  </g>
+
+  <!-- ============ 双圆交集 · 取证 ∩ IR（左下） ============ -->
+  <g transform="translate(450, 580)">
+    <rect x="-90" y="-50" width="200" height="22" rx="6" ry="6" fill="#F8FAFC" stroke="#9F1239" stroke-width="1" stroke-dasharray="3 2"/>
+    <text x="10" y="-36" font-size="11" font-weight="700" fill="#9F1239" text-anchor="middle">取证 ∩ IR</text>
+
+    <rect x="-100" y="-20" width="120" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#9F1239" stroke-width="1.2"/>
+    <text x="-40" y="-6" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">事件中取证拉取</text>
+
+    <rect x="30" y="-20" width="100" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+    <text x="80" y="-6" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">Velociraptor</text>
+
+    <rect x="-100" y="8" width="100" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#9F1239" stroke-width="1.2"/>
+    <text x="-50" y="22" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">snapshot 抓取</text>
+
+    <rect x="10" y="8" width="120" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+    <text x="70" y="22" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">取证 → IR 反馈</text>
+  </g>
+
+  <!-- ============ 双圆交集 · 风控 ∩ IR（右下） ============ -->
+  <g transform="translate(950, 580)">
+    <rect x="-90" y="-50" width="200" height="22" rx="6" ry="6" fill="#F8FAFC" stroke="#1E40AF" stroke-width="1" stroke-dasharray="3 2"/>
+    <text x="10" y="-36" font-size="11" font-weight="700" fill="#1E40AF" text-anchor="middle">风控 ∩ IR</text>
+
+    <rect x="-100" y="-20" width="120" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#1E40AF" stroke-width="1.2"/>
+    <text x="-40" y="-6" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">SOC 实时告警</text>
+
+    <rect x="30" y="-20" width="100" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+    <text x="80" y="-6" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">SOAR 联动</text>
+
+    <rect x="-100" y="8" width="110" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#1E40AF" stroke-width="1.2"/>
+    <text x="-45" y="22" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">设备指纹喂 IR</text>
+
+    <rect x="20" y="8" width="110" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#10B981" stroke-width="1.2"/>
+    <text x="75" y="22" font-size="10" font-weight="600" fill="#065F46" text-anchor="middle">异常 → 告警分流</text>
+  </g>
+
+  <!-- ============ 双圆交集 · 取证 ∩ 风控（上方） ============ -->
+  <g transform="translate(700, 330)">
+    <rect x="-100" y="-30" width="200" height="22" rx="6" ry="6" fill="#F8FAFC" stroke="#7C3AED" stroke-width="1" stroke-dasharray="3 2"/>
+    <text x="0" y="-16" font-size="11" font-weight="700" fill="#7C3AED" text-anchor="middle">取证 ∩ 风控</text>
+
+    <rect x="-100" y="0" width="100" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#9F1239" stroke-width="1.2"/>
+    <text x="-50" y="14" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">内部违规调查</text>
+
+    <rect x="10" y="0" width="110" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#1E40AF" stroke-width="1.2"/>
+    <text x="65" y="14" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">行为画像 → 证据</text>
+
+    <rect x="-100" y="28" width="100" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#9F1239" stroke-width="1.2"/>
+    <text x="-50" y="42" font-size="10" font-weight="600" fill="#9F1239" text-anchor="middle">员工泄密</text>
+
+    <rect x="10" y="28" width="100" height="22" rx="11" ry="11" fill="#FFFFFF" stroke="#1E40AF" stroke-width="1.2"/>
+    <text x="60" y="42" font-size="10" font-weight="600" fill="#1E40AF" text-anchor="middle">数据带走 / 异常</text>
+  </g>
+
+  <!-- ============ 三圆中心 · CISO 体系 ============ -->
+  <g transform="translate(700, 520)">
+    <circle cx="0" cy="0" r="78" fill="#FFFFFF" stroke="#0F172A" stroke-width="2"/>
+    <text x="0" y="-30" font-size="14" font-weight="700" fill="#0F172A" text-anchor="middle">CISO 体系</text>
+    <text x="0" y="-12" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">三 function 接力</text>
+    <text x="0" y="6" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">不可替代</text>
+    <line x1="-50" y1="14" x2="50" y2="14" stroke="#94A3B8" stroke-width="0.6"/>
+    <text x="0" y="30" font-size="10" font-weight="700" fill="#9F1239" text-anchor="middle">安委会 / 跨调查</text>
+    <text x="0" y="46" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">HR · 法务 · 公关</text>
+    <text x="0" y="62" font-size="10" font-weight="600" fill="#64748B" text-anchor="middle">PIPL §54 审计</text>
+  </g>
+
+  <!-- ============ 国内常见错配（左下浮窗） ============ -->
+  <g>
+    <rect x="40" y="720" width="320" height="160" rx="6" ry="6" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="1.2"/>
+    <text x="56" y="744" font-size="12" font-weight="700" fill="#9F1239">⚠ 国内大型互联网公司 3 大错配</text>
+    <text x="56" y="766" font-size="10" font-weight="700" fill="#9F1239">⓵ SRC = 取证团队</text>
+    <text x="64" y="782" font-size="10" fill="#1E293B">SRC 是漏洞接收平台，不是 DFIR 团队</text>
+    <text x="56" y="804" font-size="10" font-weight="700" fill="#9F1239">⓶ 风控 = 取证</text>
+    <text x="64" y="820" font-size="10" fill="#1E293B">数据保留 / schema 不为取证设计</text>
+    <text x="56" y="842" font-size="10" font-weight="700" fill="#9F1239">⓷ 蓝军 = IR</text>
+    <text x="64" y="858" font-size="10" fill="#1E293B">蓝军是 readiness，不是事件主理人</text>
+    <text x="56" y="874" font-size="10" fill="#94A3B8" font-style="italic">来源：05 报告 §三个 function 区别</text>
+  </g>
+
+  <!-- ============ 关系流箭头说明（右下浮窗） ============ -->
+  <g>
+    <rect x="1040" y="720" width="320" height="160" rx="6" ry="6" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1.2"/>
+    <text x="1056" y="744" font-size="12" font-weight="700" fill="#065F46">✓ 三 function 接力（不替代）</text>
+    <text x="1056" y="766" font-size="10" font-weight="700" fill="#065F46">IR → 取证</text>
+    <text x="1064" y="782" font-size="10" fill="#1E293B">P1/P0 containment 后取证接手 root cause</text>
+    <text x="1056" y="804" font-size="10" font-weight="700" fill="#065F46">风控 → 取证</text>
+    <text x="1064" y="820" font-size="10" fill="#1E293B">用户画像 / 设备指纹喂内部威胁调查</text>
+    <text x="1056" y="842" font-size="10" font-weight="700" fill="#065F46">取证 → IR / 风控</text>
+    <text x="1064" y="858" font-size="10" fill="#1E293B">攻击模式 → 检测规则 / 风控策略</text>
+    <text x="1056" y="874" font-size="10" fill="#94A3B8" font-style="italic">参考：Mandiant Lifecycle + DART Alexiou</text>
+  </g>
+
+  <!-- ============ 图例 ============ -->
+  <g transform="translate(540, 100)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#1E293B">圆色 = function 主色（透明叠加自然混合）</text>
+    <circle cx="280" cy="-4" r="9" fill="url(#circ-forensics)" stroke="#F43F5E" stroke-width="1.2"/>
+    <text x="294" y="0" font-size="11" fill="#9F1239">取证</text>
+    <circle cx="340" cy="-4" r="9" fill="url(#circ-risk)" stroke="#3B82F6" stroke-width="1.2"/>
+    <text x="354" y="0" font-size="11" fill="#1E40AF">风控</text>
+    <circle cx="400" cy="-4" r="9" fill="url(#circ-ir)" stroke="#10B981" stroke-width="1.2"/>
+    <text x="414" y="0" font-size="11" fill="#065F46">IR</text>
+  </g>
+</svg>
+      </div>
+      <figcaption style="margin-top:8px;color:var(--text-secondary);font-size:0.9em;text-align:center;">图 5 — 取证 vs 风控 vs IR 三 function 韦恩图。3 圆透明度叠加，CISO 居中协调。左下警示红 = 国内 3 大错配（"SRC 当取证"/"蓝军当 IR"/"风控当法证"），右下绿色 = 三 function 接力 SOP。 <a href="figures/INDEX.md" style="color:var(--accent);">设计说明 (INDEX.md)</a></figcaption>
+    </figure>
+
     <p class="sub-title">从 5 份子报告中提炼最 critical 的 10 个判断。</p>
 
     <div class="insights">

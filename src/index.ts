@@ -2452,9 +2452,51 @@ function saveState(): void {
   setRouterState('last_committed_cursor', JSON.stringify(lastCommittedCursor));
 }
 
+// Folder name 白名单(审计 ipc-1):folder 可经 register_group IPC 由 agent 控制,
+// 不校验则 `../` 路径遍历逃逸 GROUPS_DIR、或别名既有特权 folder 抢占其命名空间
+// (IPC/session/env dir + 跨组 ACL 身份均以 folder 为 key)。仅允许小写字母/数字/
+// 连字符/下划线,天然排除 `.` `..` 与路径分隔符。
+const VALID_FOLDER_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
+function isSafeGroupFolder(folder: string): boolean {
+  if (!folder || !VALID_FOLDER_RE.test(folder)) return false;
+  // belt-and-suspenders:resolve 后必须仍落在 GROUPS_DIR 内
+  const resolved = path.resolve(GROUPS_DIR, folder);
+  return resolved.startsWith(path.resolve(GROUPS_DIR) + path.sep);
+}
+
 function registerGroup(jid: string, group: RegisteredGroup): void {
+  if (!isSafeGroupFolder(group.folder)) {
+    // fail-closed:不创建目录、不写状态,避免路径遍历/特权命名空间抢占。
+    logger.error(
+      { jid, folder: group.folder },
+      'registerGroup rejected: unsafe folder name',
+    );
+    return;
+  }
+  const prev = registeredGroups[jid] ?? getRegisteredGroup(jid);
   registeredGroups[jid] = group;
   setRegisteredGroup(jid, group);
+
+  // When an IM jid moves to a DIFFERENT folder (e.g. a chat that auto-registered
+  // to the admin home `main`, then gets re-registered as its own workspace), the
+  // old folder's running container may still hold this jid as its sticky reply
+  // route (replySourceImJid / activeImReplyRoutes). If we don't clear it, that
+  // container keeps streaming/sending its replies into this jid — a cross-
+  // workspace leak (main's answers landing in the moved-out group). Reset the
+  // stale route so the old container falls back to its web JID until the next
+  // message from a still-bound source updates it.
+  if (prev && prev.folder !== group.folder) {
+    for (const [folder, route] of activeImReplyRoutes) {
+      if (route === jid && folder !== group.folder) {
+        activeImReplyRoutes.set(folder, null);
+        activeRouteUpdaters.get(folder)?.(null);
+        logger.info(
+          { jid, oldFolder: folder, newFolder: group.folder },
+          'Cleared stale IM reply route after group re-registration',
+        );
+      }
+    }
+  }
 
   // Create group folder
   const groupDir = path.join(GROUPS_DIR, group.folder);
@@ -5374,6 +5416,15 @@ async function processTaskIpc(
         break;
       }
       if (data.jid && data.name && data.folder) {
+        // 审计 ipc-1:folder 来自 agent(可能被 prompt-injection 操纵),先校验
+        // 防路径遍历 / 抢占既有特权 folder 命名空间。
+        if (!isSafeGroupFolder(data.folder)) {
+          logger.warn(
+            { sourceGroup, folder: data.folder },
+            'register_group blocked: unsafe folder name',
+          );
+          break;
+        }
         // Inherit created_by from the source group so onNewChat won't re-route
         const sourceEntry = Object.values(registeredGroups).find(
           (g) => g.folder === sourceGroup,
@@ -5615,6 +5666,27 @@ async function processTaskIpc(
               );
               break;
             }
+          }
+
+          // Symlink-safe re-check (审计 isolation-1): startsWith 前缀判断不解析
+          // 符号链接,容器内 agent 可在工作区 `ln -s` 指向宿主机敏感文件(如
+          // session-secret.key)绕过。这里 realpath 解析后重新断言仍在工作区内。
+          // 此时 resolvedPath 必已存在(上方 existsSync/fallback 保证),realpath 安全。
+          try {
+            resolvedPath = fs.realpathSync(resolvedPath);
+          } catch {
+            logger.warn(
+              { sourceGroup, filePath: data.filePath, resolvedPath },
+              'send_file blocked: realpath failed',
+            );
+            break;
+          }
+          if (!resolvedPath.startsWith(safeRoot)) {
+            logger.warn(
+              { sourceGroup, filePath: data.filePath, resolvedPath },
+              'send_file blocked: symlink target escapes workspace',
+            );
+            break;
           }
 
           const fileImRoute = resolveImRoute({
@@ -8118,6 +8190,9 @@ async function connectUserIMChannels(
             onAgentMessage,
             onBotAddedToGroup: buildTelegramBotAddedHandler(userId, homeFolder),
             onBotRemovedFromGroup,
+            shouldProcessGroupMessage,
+            isGroupOwnerMessage,
+            isSenderAllowedInGroup,
           },
         )
       : Promise.resolve(false);
@@ -8656,6 +8731,9 @@ async function main(): Promise<void> {
             homeFolder,
           ),
           onBotRemovedFromGroup: buildOnBotRemovedFromGroup(),
+          shouldProcessGroupMessage,
+          isGroupOwnerMessage,
+          isSenderAllowedInGroup,
         },
       );
       return connected;
@@ -8753,6 +8831,9 @@ async function main(): Promise<void> {
             onAgentMessage: buildOnAgentMessage(),
             onBotAddedToGroup: buildTelegramBotAddedHandler(userId, homeFolder),
             onBotRemovedFromGroup: buildOnBotRemovedFromGroup(),
+            shouldProcessGroupMessage,
+            isGroupOwnerMessage,
+            isSenderAllowedInGroup,
           },
         );
         logger.info(

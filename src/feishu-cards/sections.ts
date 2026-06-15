@@ -97,22 +97,32 @@ export interface TitleExtractResult {
  * first non-empty line. `bodyStartIndex` is the line index where the body starts
  * so the caller can strip the heading from the rendered body.
  */
+// 飞书卡片头会按宽度截断；超过这个长度的散文首行不当标题"吃掉"，改为只在
+// 标题放截断预览、完整首行保留在正文（bodyStartIndex 指向首行本身），避免内容丢失。
+const TITLE_MAX = 30;
+
 export function extractTitle(text: string): TitleExtractResult {
   const lines = text.split('\n');
   for (let i = 0; i < lines.length; i++) {
     if (!lines[i].trim()) continue;
+    // ① 显式 markdown 标题（#）→ 当标题并从正文移除（它本就是短标签，回显冗余）。
     if (/^#{1,3}\s+/.test(lines[i])) {
       return {
-        title: lines[i].replace(/^#+\s*/, '').trim(),
+        title: lines[i].replace(/^#+\s*/, '').trim() || 'Reply',
         bodyStartIndex: i + 1,
       };
     }
     const firstLine = lines[i].replace(/[*_`#\[\]]/g, '').trim();
-    const title =
-      firstLine.length > 40
-        ? firstLine.slice(0, 37) + '...'
-        : firstLine || 'Reply';
-    return { title, bodyStartIndex: i + 1 };
+    // ② 短散文首行 → 够短不会被截，安全地当标题并从正文移除。
+    if (firstLine.length <= TITLE_MAX) {
+      return { title: firstLine || 'Reply', bodyStartIndex: i + 1 };
+    }
+    // ③ 长散文首行 → 飞书头会截断、剩余会丢。标题只放截断预览当"标签"，
+    //    完整首行保留在正文（bodyStartIndex 指向 i，不是 i+1），不丢内容。
+    return {
+      title: firstLine.slice(0, TITLE_MAX - 1) + '…',
+      bodyStartIndex: i,
+    };
   }
   return { title: 'Reply', bodyStartIndex: 0 };
 }
@@ -571,27 +581,16 @@ export function buildStreamingPanels(init: StreamingPanelsInit): El[] {
       element_id: CARD_ELEMENT_IDS.STATUS_BANNER,
       content: init.statusBanner ?? buildStatusBannerText({ phase: 'idle' }),
     },
-    buildRuntimePanel({
-      elementId: CARD_ELEMENT_IDS.ASK_PANEL,
-      contentElementId: CARD_ELEMENT_IDS.ASK_CONTENT,
-      title: '**❓ 等待你的回复**',
-      expanded: init.expandAsk ?? true,
-      content:
-        init.askContent ?? "<font color='grey'>暂无提问</font>",
-    }),
+    // "等待你的回复"(AskUserQuestion)面板已移除：飞书不渲染 AskUserQuestion
+    // 选项 UI，我们在飞书一律用纯文本列选项，该面板永远空。
+    // "工具时间轴"(TOOLS)面板已移除：与下方"调用轨迹"(TIMELINE)由同一批
+    // tool 事件喂养、信息冗余，只保留更简洁的"调用轨迹"。
     buildRuntimePanel({
       elementId: CARD_ELEMENT_IDS.PROGRESS_PANEL,
       contentElementId: CARD_ELEMENT_IDS.PROGRESS_CONTENT,
       title: '**📋 任务进度**',
       expanded: init.expandProgress ?? false,
       content: init.progressContent ?? '<font color=\'grey\'>等待任务规划…</font>',
-    }),
-    buildRuntimePanel({
-      elementId: CARD_ELEMENT_IDS.TOOLS_PANEL,
-      contentElementId: CARD_ELEMENT_IDS.TOOLS_CONTENT,
-      title: '**🛠 工具时间轴**',
-      expanded: init.expandTools ?? false,
-      content: init.toolsContent ?? '<font color=\'grey\'>尚未调用工具…</font>',
     }),
     buildRuntimePanel({
       elementId: CARD_ELEMENT_IDS.THINKING_PANEL,
